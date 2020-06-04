@@ -18,10 +18,11 @@ public class MemberDAO {
 	public ArrayList<MemberVo> list(String id) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
-		System.out.println(list.size());
+		System.out.println("여기야");
 		try {
 			connDB();
-			String find = "SELECT pi.P_ID, pi.P_PWD, ui.U_NAME, ui.U_DATE, ui.U_ADDRESS, ui.U_CONTACT FROM PRIVATE_INFORMATION pi JOIN USER_INFORMATION ui ON pi.P_DUNUMBER = ui.U_NUMBER WHERE p_id = '"+id+"'";
+			String find = "SELECT pi.P_ID, pi.P_PWD, ui.U_NAME, ui.U_DATE, ui.U_ADDRESS, ui.U_CONTACT FROM PRIVATE_INFORMATION pi JOIN USER_INFORMATION ui ON pi.P_DUNUMBER = ui.U_NUMBER WHERE p_id = '"
+					+ id + "'";
 			rs = stmt.executeQuery(find);
 			while (rs.next()) {
 				String u_id = rs.getString(1);
@@ -30,17 +31,39 @@ public class MemberDAO {
 				int u_date = rs.getInt(4);
 				String u_address = rs.getString(5);
 				String u_contact = rs.getString(6);
-				MemberVo pvinfo = new MemberVo(u_id, u_pwd, u_name, u_date, u_address, u_contact); 
+				MemberVo pvinfo = new MemberVo(u_id, u_pwd, u_name, u_date, u_address, u_contact);
 				list.add(pvinfo);
 			}
-			
 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return list;
+	}
+
+	public ArrayList<MemberVo> hoslist(String hospital) {
+		// ArrayList는 자바에서 지원하는 자료구조..
+		ArrayList<MemberVo> hoslist = new ArrayList<MemberVo>();
+		System.out.println("진행됨");
+		try {
+			connDB();
+			String find = "Select * from hospital_information where h_name like '%"+hospital+"%'";
+			rs = stmt.executeQuery(find);
+			
+			while (rs.next()) {
+				String h_name = rs.getString(2);
+				String h_address  = rs.getString(3);
+				String h_contact = rs.getString(4);
+				MemberVo hinfo = new MemberVo(h_name, h_address, h_contact);
+				hoslist.add(hinfo);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return hoslist;
 	}
 
 	public void connDB() {
