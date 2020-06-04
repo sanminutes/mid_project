@@ -1,58 +1,73 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+
 public class MemberTest extends WindowAdapter implements ActionListener {
-	Frame f, fjoin, fmain_user;
-	Button btn_login, btn_join, btn_find, btn_create, btn_back, btn_fjoin_ok, btn_prev, btn_next;
-	Button[] btn_Arr;
-	TextField Tfd, Tid, Tpwd, T_hospital, T_medical, T_name, T_date, T_address, T_contact, T_id, T_pwd;
-	Label Lid, Lpwd, L_hospital, L_medical, L_name, L_date, L_address, L_contact, L_id, L_pwd, L_popup1, L_popup2,
-			L_popup3, L_popup4, m_user, L_YearMonth;
-	Image img;
-	Dialog Popup;
+	JFrame f, fjoin, fmain_user;
+	JButton btn_login, btn_create, btn_back, btn_fjoin_ok, btn_prev, btn_next, btn_join, btn_find;
+	JButton[] btn_Arr;
+	JTextField Tfd, Tid, Tpwd, T_hospital, T_medical, T_name, T_date, T_address, T_contact, T_id, T_pwd;
+	JLabel Lid, Lpwd, L_hospital, L_medical, L_name, L_date, L_address, L_contact, L_id, L_pwd, L_popup1, L_popup2,
+			L_popup3, L_popup4, m_user, L_YearMonth, sun, mon, tue, wed, thu, fri, sat;
+	JDialog Popup;
 	Checkbox doctor, user;
 	Calendar date = Calendar.getInstance();
+	Font btn_nomal;
+	Border lineBorder;
 
 	MemberTest() {
-		f = new Frame("병원 진료 예약 시스템");
+		f = new JFrame("병원 진료 예약 시스템");
 		f.setSize(350, 500);
-		f.setBackground(Color.getHSBColor(0, 0, 40));
+		f.getContentPane().setBackground(Color.getHSBColor(0, 0, 40)); // 프레임 배경색 지정
 		f.setLayout(null);
 		f.setResizable(false); // 창크기고정
 
-		Lid = new Label("아이디 :");
-		Lpwd = new Label("비밀번호 : ");
+		Lid = new JLabel("아이디 :");
+		Lpwd = new JLabel("비밀번호 : ");
+		btn_login = new JButton("접속");
+		btn_join = new JButton("회원가입");
+		btn_find = new JButton("아이디/비밀번호찾기");
+		Tfd = new JTextField(46);
+		Tid = new JTextField(20);
+		Tpwd = new JTextField(20);
+		Lid.setFont(btn_nomal);
+		Lpwd.setFont(btn_nomal);
 
-		Tfd = new TextField(46);
-		Tid = new TextField(20);
-		Tpwd = new TextField(20);
-		btn_login = new Button("접속");
-		btn_join = new Button("회원가입");
-		btn_find = new Button("아이디/비밀번호찾기");
-		btn_create = new Button("가입");
-		btn_back = new Button("취소");
-
-		Lid.setBounds(52, 315, 45, 25);
-		Lpwd.setBounds(40, 345, 60, 25);
-		Tid.setBounds(100, 315, 140, 25);
-		Tpwd.setBounds(100, 345, 140, 25);
-		btn_login.setBounds(250, 312, 50, 60);
-		btn_join.setBounds(60, 390, 80, 25);
-		btn_find.setBounds(160, 390, 140, 25);
-		Tfd.setBounds(20, 460, 310, 25);// x, y, w,h
+		Lid.setBounds(42, 300, 45, 25);
+		Lpwd.setBounds(30, 335, 60, 25);
+		Tid.setBounds(90, 300, 140, 25);
+		Tpwd.setBounds(90, 335, 140, 25);
+		btn_login.setBounds(240, 300, 60, 60);
+		btn_join.setBounds(60, 370, 80, 25);
+		btn_find.setBounds(160, 370, 140, 25);
+		Tfd.setBounds(18, 420, 300, 25);// x, y, w,h
 
 		Tfd.setEditable(false); // 텍스트필드에 입력못함
 		f.add(Lid);
-		f.add(Tid);
 		f.add(Lpwd);
+		f.add(Tid);
 		f.add(Tpwd);
 		f.add(btn_login);
 		f.add(Tfd);
 		f.add(btn_join);
 		f.add(btn_find);
+		btn_join.setBackground(Color.getHSBColor(0, 0, 40));
+		btn_find.setBackground(Color.getHSBColor(0, 0, 40));
+		btn_login.setBackground(Color.getHSBColor(0, 0, 40));
+		btn_nomal = new Font("나눔고딕", Font.PLAIN, 12);
+		btn_join.setFont(btn_nomal);
+		btn_find.setFont(btn_nomal);
+		btn_login.setFont(btn_nomal);
+
 		btn_login.addActionListener(this);
 		btn_join.addActionListener(this);
 
@@ -66,48 +81,60 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 	}
 
 	public void join_choice() {
-		fjoin = new Frame("병원 진료 예약 시스템");
-		fjoin.setBackground(Color.getHSBColor(0, 0, 40));
+		fjoin = new JFrame("병원 진료 예약 시스템");
+		fjoin.getContentPane().setBackground(Color.getHSBColor(0, 0, 40));
 		fjoin.setLayout(null);
 		fjoin.setSize(350, 540);
 		fjoin.setResizable(false);
 		CheckboxGroup group1 = new CheckboxGroup();
 		doctor = new Checkbox(" 의사", group1, true);
 		user = new Checkbox(" 환자", group1, true);
+		doctor.setFont(btn_nomal);
+		user.setFont(btn_nomal);
+		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'에 Check]");
+		L_id = new JLabel("아이디 : ");
+		L_pwd = new JLabel("비밀번호 : ");
+		L_name = new JLabel("이름 : ");
+		L_date = new JLabel("생년월일 : ");
+		L_address = new JLabel("주소 : ");
+		L_contact = new JLabel("연락처 : ");
+		T_name = new JTextField();
+		T_date = new JTextField();
+		T_address = new JTextField();
+		T_contact = new JTextField();
+		T_id = new JTextField();
+		T_pwd = new JTextField();
+		btn_create = new JButton("가입");
+		btn_back = new JButton("돌아가기");
+		btn_create.setFont(btn_nomal);
+		btn_back.setFont(btn_nomal);
+		btn_create.setBackground(Color.getHSBColor(0, 0, 40));
+		btn_back.setBackground(Color.getHSBColor(0, 0, 40));
+		Lmessage1.setFont(btn_nomal);
+		L_id.setFont(btn_nomal);
+		L_pwd.setFont(btn_nomal);
+		L_name.setFont(btn_nomal);
+		L_date.setFont(btn_nomal);
+		L_address.setFont(btn_nomal);
+		L_contact.setFont(btn_nomal);
 
-		Label Lmessage1 = new Label("[협력 병원에 소속된 의사인 경우만 '의사'에 Check]");
-		L_id = new Label("아이디 : ");
-		L_pwd = new Label("비밀번호 : ");
-		L_name = new Label("이름 : ");
-		L_date = new Label("생년월일 : ");
-		L_address = new Label("주소 : ");
-		L_contact = new Label("연락처 : ");
-		T_name = new TextField();
-		T_date = new TextField();
-		T_address = new TextField();
-		T_contact = new TextField();
-		T_id = new TextField();
-		T_pwd = new TextField();
-		btn_create = new Button("가입");
-		btn_back = new Button("돌아가기");
-
-		doctor.setBounds(52, 90, 60, 25);
-		user.setBounds(120, 90, 60, 25);
-		Lmessage1.setBounds(40, 60, 320, 25);
-		L_id.setBounds(40, 160, 60, 25);
-		L_pwd.setBounds(40, 200, 60, 25);
-		L_name.setBounds(40, 240, 60, 25);
-		L_date.setBounds(40, 280, 60, 25);
-		L_address.setBounds(40, 320, 60, 25);
-		L_contact.setBounds(40, 360, 60, 25);
-		T_id.setBounds(120, 160, 180, 25);
-		T_pwd.setBounds(120, 200, 180, 25);
-		T_name.setBounds(120, 240, 180, 25);
-		T_date.setBounds(120, 280, 180, 25);
-		T_address.setBounds(120, 320, 180, 25);
-		T_contact.setBounds(120, 360, 180, 25);
-		btn_create.setBounds(40, 480, 120, 25);
-		btn_back.setBounds(180, 480, 120, 25);
+		Lmessage1.setBounds(36, 40, 320, 25);
+		doctor.setBounds(120, 80, 60, 25);
+		user.setBounds(240, 80, 60, 25);
+		L_id.setBounds(40, 120, 60, 25);
+		L_pwd.setBounds(40, 160, 60, 25);
+		L_name.setBounds(40, 200, 60, 25);
+		L_date.setBounds(40, 240, 60, 25);
+		L_address.setBounds(40, 280, 60, 25);
+		L_contact.setBounds(40, 320, 60, 25);
+		T_id.setBounds(120, 120, 180, 25);
+		T_pwd.setBounds(120, 160, 180, 25);
+		T_name.setBounds(120, 200, 180, 25);
+		T_date.setBounds(120, 240, 180, 25);
+		T_address.setBounds(120, 280, 180, 25);
+		T_contact.setBounds(120, 320, 180, 25);
+		btn_create.setBounds(40, 450, 120, 25);
+		btn_back.setBounds(180, 450, 120, 25);
 //
 
 		fjoin.add(doctor);
@@ -136,18 +163,20 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
-				L_hospital = new Label("소속 병원명 : ");
-				L_medical = new Label("진료 과목명 : ");
-				T_hospital = new TextField();
-				T_medical = new TextField();
+				L_hospital = new JLabel("소속 병원명 : ");
+				L_medical = new JLabel("진료 과목명 : ");
+				T_hospital = new JTextField();
+				T_medical = new JTextField();
+				L_hospital.setFont(btn_nomal);
+				L_medical.setFont(btn_nomal);
 				fjoin.add(T_hospital);
 				fjoin.add(T_medical);
 				fjoin.add(L_hospital);
 				fjoin.add(L_medical);
-				L_hospital.setBounds(40, 400, 100, 25);
-				L_medical.setBounds(40, 440, 100, 25);
-				T_hospital.setBounds(120, 400, 180, 25);
-				T_medical.setBounds(120, 440, 180, 25);
+				L_hospital.setBounds(40, 360, 100, 25);
+				L_medical.setBounds(40, 400, 100, 25);
+				T_hospital.setBounds(120, 360, 180, 25);
+				T_medical.setBounds(120, 400, 180, 25);
 			}
 		});
 		user.addItemListener(new ItemListener() {
@@ -164,63 +193,124 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 	}
 
 	public void main_hospital(MemberVo data) {
-		fmain_user = new Frame();
-		fmain_user.setSize(1000, 800);
-		fmain_user.setBackground(Color.getHSBColor(0, 0, 40));
+		fmain_user = new JFrame();
+		fmain_user.setSize(1000, 700);
+		fmain_user.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		fmain_user.setLayout(null);
 		fmain_user.setVisible(true);
-		m_user = new Label("[" + data.getU_name() + "님, 반갑습니다.]");
+		m_user = new JLabel("[" + data.getU_name() + "님, 반갑습니다.]");
+		m_user.setFont(btn_nomal);
 		Panel p_left = new Panel();
 		Panel p_right = new Panel();
-		Panel left_p = new Panel();
-		Panel North_p = new Panel();
 		Panel Center_p = new Panel();
+		Panel title_sun = new Panel();
+		Panel title_mon = new Panel();
+		Panel title_tue = new Panel();
+		Panel title_wed = new Panel();
+		Panel title_thu = new Panel();
+		Panel title_fri = new Panel();
+		Panel title_sat = new Panel();
+		title_sun.setLayout(null);
+		title_mon.setLayout(null);
+		title_tue.setLayout(null);
+		title_wed.setLayout(null);
+		title_thu.setLayout(null);
+		title_fri.setLayout(null);
+		title_sat.setLayout(null);
+		title_mon.setVisible(true);
+		title_tue.setVisible(true);
+		title_wed.setVisible(true);
+		title_thu.setVisible(true);
+		title_fri.setVisible(true);
+		title_sat.setVisible(true);
 		p_left.setVisible(true);
 		p_right.setVisible(true);
-		left_p.setVisible(true);
-		North_p.setVisible(true);
-		left_p.setLayout(null);
+		p_left.setLayout(null);
 		Center_p = new Panel();
 		fmain_user.add(m_user);
 		fmain_user.add(p_left);
 		fmain_user.add(p_right);
-		btn_prev = new Button("◀");
-		btn_next = new Button("▶");
-		left_p.add(btn_prev);
-		left_p.add(btn_next);
-		p_left.add(left_p);
-		left_p.add(North_p);
-		left_p.add(Center_p);
-		btn_prev.setBounds(100, 100, 40, 40);
-		btn_next.setBounds(390, 100, 40, 40);
-		btn_Arr = new Button[42]; // 숫자넣어줄버튼들
-		p_left.setBounds(40, 100, 540, 500);
+		btn_prev = new JButton("◀");
+		btn_next = new JButton("▶");
+		sun = new JLabel("SUN");
+		mon = new JLabel("MON");
+		tue = new JLabel("TUE");
+		wed = new JLabel("WED");
+		thu = new JLabel("THU");
+		fri = new JLabel("FRI");
+		sat = new JLabel("SAT");
+		p_left.add(btn_prev);
+		p_left.add(btn_next);
+		p_left.add(title_sun);
+		p_left.add(title_mon);
+		p_left.add(title_tue);
+		p_left.add(title_wed);
+		p_left.add(title_thu);
+		p_left.add(title_fri);
+		p_left.add(title_sat);
+		title_sun.add(sun);
+		title_mon.add(mon);
+		title_tue.add(tue);
+		title_wed.add(wed);
+		title_thu.add(thu);
+		title_fri.add(fri);
+		title_sat.add(sat);
+		sun.setForeground(Color.white);
+		mon.setForeground(Color.white);
+		tue.setForeground(Color.white);
+		wed.setForeground(Color.white);
+		thu.setForeground(Color.white);
+		fri.setForeground(Color.white);
+		sat.setForeground(Color.white);
+		p_left.add(Center_p);
+		btn_prev.setBounds(100, 20, 60, 30);
+		btn_next.setBounds(380, 20, 60, 30);
+		btn_prev.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+		btn_next.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+		title_sun.setBounds(4, 131, 72, 50);
+		title_mon.setBounds(78, 131, 73, 50);
+		title_tue.setBounds(153, 131, 73, 50);
+		title_wed.setBounds(228, 131, 73, 50);
+		title_thu.setBounds(303, 131, 73, 50);
+		title_fri.setBounds(378, 131, 73, 50);
+		title_sat.setBounds(453, 131, 73, 50);
+		sun.setBounds(23, 14, 30, 25);
+		mon.setBounds(23, 14, 30, 25);
+		tue.setBounds(23, 14, 30, 25);
+		wed.setBounds(23, 14, 30, 25);
+		thu.setBounds(23, 14, 30, 25);
+		fri.setBounds(23, 14, 30, 25);
+		sat.setBounds(23, 14, 30, 25);
+		title_sun.setBackground(Color.red);
+		title_mon.setBackground(Color.gray);
+		title_tue.setBackground(Color.gray);
+		title_wed.setBackground(Color.gray);
+		title_thu.setBackground(Color.gray);
+		title_fri.setBackground(Color.gray);
+		title_sat.setBackground(Color.blue);;
+		btn_Arr = new JButton[42]; // 숫자넣어줄버튼들
+		p_left.setBounds(40, 100, 530, 490);
 		p_right.setBounds(620, 100, 340, 500);
-		left_p.setBounds(0, 0, 530, 490);
-		North_p.setBounds(0, 0, 530, 60);
 		Center_p.setBounds(0, 180, 530, 310);//
-		p_left.setBackground(Color.yellow);
+		p_left.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		p_right.setBackground(Color.white);
-		left_p.setBackground(Color.white);
-		North_p.setBackground(Color.yellow);
-		m_user.setBounds(820, 60, 240, 25);
-
+		m_user.setBounds(800, 30, 240, 25);
 
 		// ---------------------[달력셋팅]
 
 		date = Calendar.getInstance();
-		L_YearMonth = new Label();
+		L_YearMonth = new JLabel();
 		L_YearMonth.setVisible(true);
-		L_YearMonth.setBounds(200, 100, 120, 40);
+		L_YearMonth.setBounds(220, 16, 140, 40);
 
 		btn_prev.addActionListener(this);
 		btn_next.addActionListener(this);
 
-		left_p.add(L_YearMonth);
+		p_left.add(L_YearMonth);
 		// ---------------------
 		Center_p.setLayout(new GridLayout(6, 7));
 		for (int i = 0; i < btn_Arr.length; i++) {
-			btn_Arr[i] = new Button("");
+			btn_Arr[i] = new JButton("");
 			Center_p.add(btn_Arr[i]);
 		}
 		// ---------------------
@@ -228,26 +318,36 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 	}
 
 	public void setDays(Calendar date) {
+		lineBorder = BorderFactory.createLineBorder(Color.getHSBColor(0.0f, 0.0f, 0.9f), 1);
 		int year = date.get(Calendar.YEAR);
 		int month = date.get(Calendar.MONTH);
 
-		L_YearMonth.setText(year + "년 " + (month + 1) + "월");
-		Font YearMonth = new Font("", Font.BOLD, 24); // 글씨 폰트변경 위한 객체
+		L_YearMonth.setText(year + " / " + (month + 1));
+		Font YearMonth = new Font("바른나눔고딕", Font.BOLD, 24); // 글씨 폰트변경 위한 객체
 		L_YearMonth.setFont(YearMonth);
 		Calendar sDay = Calendar.getInstance(); // 시작일
 
 		sDay.set(year, month, 1);
 		sDay.add(Calendar.DATE, -sDay.get(Calendar.DAY_OF_WEEK) + 1);
-
+		int check = 1;
 		for (int i = 0; i < btn_Arr.length; i++, sDay.add(Calendar.DATE, 1)) {
 			int day = sDay.get(Calendar.DATE);
-			btn_Arr[i].setLabel(day + "");
-			System.out.println(day);
+
+			if (day == check) {
+				btn_Arr[i].setLabel(day + "");
+				btn_Arr[i].setBorder(lineBorder);
+
+				check++;
+			} else {
+				btn_Arr[i].setLabel("");
+				btn_Arr[i].setBorder(lineBorder);
+			}
 
 			if (sDay.get(Calendar.MONTH) != month) {
-				btn_Arr[i].setBackground(Color.lightGray);
+				btn_Arr[i].setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+				// 색상 변경 타입 float
 			} else {
-				btn_Arr[i].setBackground(Color.getHSBColor(0, 20, 40));
+				btn_Arr[i].setBackground(Color.white);
 			}
 		}
 	}
@@ -275,12 +375,12 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 			String strdate = T_date.getText();
 			String straddress = T_address.getText();
 			String strcontact = T_contact.getText();
-			Popup = new Dialog(fjoin, "가입안내", true);
-			L_popup1 = new Label();
-			L_popup2 = new Label();
-			L_popup3 = new Label();
-			L_popup4 = new Label();
-			btn_fjoin_ok = new Button("확인");
+			Popup = new JDialog(fjoin, "가입안내", true);
+			L_popup1 = new JLabel();
+			L_popup2 = new JLabel();
+			L_popup3 = new JLabel();
+			L_popup4 = new JLabel();
+			btn_fjoin_ok = new JButton("확인");
 			btn_fjoin_ok.setBounds(150, 150, 40, 25);
 			L_popup1.setBounds(20, 60, 310, 25);
 			L_popup2.setBounds(20, 80, 300, 25);
@@ -374,9 +474,9 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 		if (e.getActionCommand().contains("접속")) {
 			MemberDAO oct = new MemberDAO();
 			if (Tid.getText().isEmpty()) {
-				Tfd.setText("아이디를 입력해주세요.");
+				Tfd.setText("  아이디를 입력해주세요.");
 			} else if (Tpwd.getText().isEmpty()) {
-				Tfd.setText("비밀번호를 입력해주세요.");
+				Tfd.setText("  비밀번호를 입력해주세요.");
 			} else {
 				ArrayList<MemberVo> list = oct.list(Tid.getText());
 				MemberVo data = (MemberVo) list.get(0);
@@ -387,7 +487,7 @@ public class MemberTest extends WindowAdapter implements ActionListener {
 					list.clear();
 					main_hospital(data);
 				} else {
-					Tfd.setText("아이디와 비밀번호를 확인해주세요.");
+					Tfd.setText("  아이디와 비밀번호를 확인해주세요.");
 
 				}
 			}
