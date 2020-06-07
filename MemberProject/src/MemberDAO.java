@@ -21,7 +21,7 @@ public class MemberDAO {
 		System.out.println("여기야");
 		try {
 			connDB();
-			String find = "SELECT pi.P_ID, pi.P_PWD, ui.U_NAME, ui.U_DATE, ui.U_ADDRESS, ui.U_CONTACT FROM PRIVATE_INFORMATION pi JOIN USER_INFORMATION ui ON pi.P_DUNUMBER = ui.U_NUMBER WHERE p_id = '"
+			String find = "SELECT pi.P_ID, pi.P_PWD, ui.U_NAME, ui.U_DATE, ui.U_ADDRESS, ui.U_CONTACT FROM PRIVATE_INFORMATION pi JOIN USER_INFORMATION ui ON pi.u_number= ui.U_NUMBER WHERE p_id = '"
 					+ id + "'";
 			rs = stmt.executeQuery(find);
 			while (rs.next()) {
@@ -45,7 +45,6 @@ public class MemberDAO {
 	public ArrayList<MemberVo> hoslist(String hospital) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<MemberVo> hoslist = new ArrayList<MemberVo>();
-		System.out.println("진행됨");
 		try {
 			connDB();
 			String find = "Select * from hospital_information where h_name like '%"+hospital+"%'";
