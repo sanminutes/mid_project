@@ -11,6 +11,7 @@ public class MemberVo {
 	private String h_name;
 	private String h_address;
 	private String h_contact;
+	private String T_id;
 
 	public MemberVo() {
 	}
@@ -116,5 +117,13 @@ public class MemberVo {
 
 	public void setH_contact(String h_contact) {
 		this.h_contact = h_contact;
+	}
+
+	public String getT_id() {
+		return T_id;
+	}
+
+	public void setT_id(String t_id) {
+		this.T_id = t_id;
 	}
 }

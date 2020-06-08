@@ -111,6 +111,7 @@ public class Login extends WindowAdapter {
 		JTextField medical = new JTextField();
 		JTextField date_2 = new JTextField();
 		JButton btn_hospital = new JButton("[°Ë»ö]");
+		
 		p_left.add(btn_prev);
 		p_left.add(btn_next);
 		p_left.add(North);
@@ -316,7 +317,7 @@ public class Login extends WindowAdapter {
 
 		JTable table = new JTable(model);
 		JScrollPane scroll = new JScrollPane(table);
-
+		table.clearSelection();
 		table.setFont(btn_nomal);
 		find_hsp.add(scroll);
 		find_hsp.setResizable(false);
@@ -357,7 +358,8 @@ public class Login extends WindowAdapter {
 			}
 		}
 	}
-    public void windowClosing(WindowEvent e) {
-    	System.exit(0);
-    }
+
+	public void windowClosing(WindowEvent e) {
+		System.exit(0);
+	}
 }

@@ -11,7 +11,6 @@ import javax.swing.JTextField;
 public class MemberTest extends WindowAdapter {
 	JFrame f;
 	TextField Tid, Tpwd, Tfd;
-	JDialog Popup;
 	Checkbox doctor, user;
 	Calendar date = Calendar.getInstance();
 	Font btn_nomal;

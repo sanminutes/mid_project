@@ -9,7 +9,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -18,9 +17,9 @@ import javax.swing.JTextField;
 
 public class membership {
 	JFrame fjoin;
-	JLabel L_hospital, L_medical;
+	JLabel L_hospital, L_medical, L_idx, L_msg;
 	Font btn_nomal;
-	JTextField T_hospital, T_medical;
+	JTextField T_hospital, T_medical, T_id;
 	JDialog Popup;
 
 	public void join_choice() { // 회원가입
@@ -37,7 +36,7 @@ public class membership {
 		user.setFont(btn_nomal);
 		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'에 Check]");
 		JLabel L_id = new JLabel("아이디 : ");
-		JLabel L_idx = new JLabel();
+		L_idx = new JLabel();
 		JLabel L_pwd = new JLabel("비밀번호 : ");
 		JLabel L_pwdx = new JLabel();
 		JLabel L_name = new JLabel("이름 : ");
@@ -52,10 +51,12 @@ public class membership {
 		T_date.setForeground(Color.LIGHT_GRAY);
 		JTextField T_address = new JTextField();
 		JTextField T_contact = new JTextField();
-		JTextField T_id = new JTextField();
+		T_id = new JTextField();
 		JTextField T_pwd = new JTextField();
 		JButton btn_create = new JButton("가입");
 		JButton btn_back = new JButton("돌아가기");
+		Popup = new JDialog(fjoin, "병원 진료 예약 시스템", true);
+		L_msg = new JLabel();
 		btn_create.setFont(btn_nomal);
 		btn_back.setFont(btn_nomal);
 		btn_create.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
@@ -81,6 +82,7 @@ public class membership {
 		L_datex.setBounds(40, 260, 300, 25);
 		L_address.setBounds(40, 280, 60, 25);
 		L_contact.setBounds(40, 320, 60, 25);
+		L_contactx.setBounds(40, 340, 300, 25);
 		T_id.setBounds(120, 120, 180, 25);
 		T_pwd.setBounds(120, 160, 180, 25);
 		T_name.setBounds(120, 200, 180, 25);
@@ -89,7 +91,12 @@ public class membership {
 		T_contact.setBounds(120, 320, 180, 25);
 		btn_create.setBounds(40, 450, 120, 25);
 		btn_back.setBounds(180, 450, 120, 25);
-//
+		Popup.setLayout(null);
+		L_msg.setBounds(70,20,200,25);
+		L_msg.setFont(new Font("나눔바른고딕",Font.PLAIN,14));
+		
+		Popup.setSize(300, 150);
+		Popup.setLocation(24, 150);
 
 		fjoin.add(doctor);
 		fjoin.add(user);
@@ -110,8 +117,11 @@ public class membership {
 		fjoin.add(L_pwdx);
 		fjoin.add(L_namex);
 		fjoin.add(L_datex);
+		fjoin.add(L_contactx);
 		fjoin.add(btn_create);
 		fjoin.add(btn_back);
+		Popup.add(L_msg);
+		L_msg.setVisible(true);
 
 		T_id.addFocusListener(new FocusListener() { // 아이디 유효성 검사
 			@Override
@@ -133,12 +143,24 @@ public class membership {
 						if (T_id.getText().length() < 5 || T_id.getText().length() > 20) {
 							L_idx.setText("5~20자의 영문 소문자, 숫자만 사용 가능.");
 						} else {
-							L_idx.setText("");
+							if (i == T_id.getText().length() - 1) {
+								MemberDAO dao = new MemberDAO();
+								ArrayList<MemberVo> list = dao.list(T_id.getText());
+								if (list.size() == 0) {
+									L_idx.setText("해당 아이디는 가입 가능합니다.");
+									L_idx.setForeground(Color.blue);
+								} else {
+									L_idx.setText("해당 아이디는 가입할 수 없습니다.");
+								}
+							}
 						}
 					}
 				}
+
 				if (T_id.getText().isEmpty()) {
 					L_idx.setText("필수 항목입니다.");
+				} else {
+
 				}
 
 			}
@@ -215,10 +237,10 @@ public class membership {
 				L_datex.setForeground(Color.red);
 				for (int i = 0; i < T_date.getText().length(); i++) {
 					if (T_date.getText().charAt(i) < '0' || T_date.getText().charAt(i) > '9') {
-						L_datex.setText("생년월일은  8자리의 숫자만 입력가능");
+						L_datex.setText("생년월일은 8자리로 숫자만 입력가능");
 					} else {
 						if (T_date.getText().length() != 8) {
-							L_datex.setText("생년월일은  8자리의 숫자만 입력가능");
+							L_datex.setText("생년월일은 8자리로 숫자만 입력가능");
 						} else {
 							L_datex.setText("");
 						}
@@ -226,6 +248,38 @@ public class membership {
 				}
 				if (T_date.getText().isEmpty()) {
 					L_datex.setText("필수 항목입니다.");
+
+				}
+			}
+
+		});
+
+		T_contact.addFocusListener(new FocusListener() { // 연락처 유효성 검사
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				L_contactx.setForeground(Color.red);
+				for (int i = 0; i < T_contact.getText().length(); i++) {
+					if (T_contact.getText().charAt(i) < '0' || T_contact.getText().charAt(i) > '9') {
+						L_contactx.setText("연락처는 -를 제외한 숫자만 입력가능");
+					} else {
+						if (T_contact.getText().length() < 10 || T_contact.getText().length() > 11) {
+							L_contactx.setText("연락처는 -를 제외한 숫자만 입력가능");
+						} else {
+							L_contactx.setText("");
+						}
+					}
+				}
+				if (T_contact.getText().isEmpty()) {
+					L_contactx.setText("필수 항목입니다.");
 
 				}
 			}
@@ -242,22 +296,48 @@ public class membership {
 
 		});
 		btn_create.addActionListener(new ActionListener() { // 가입 버튼
+			private MemberVo memberVo;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				// 아이디 제약조건
-				MemberDAO dao = new MemberDAO();
-				ArrayList<MemberVo> list = dao.list(T_id.getText());
-
-				for (int i = 0; i < list.size(); i++) {
-					MemberVo data = (MemberVo) list.get(i);
-					String u_id = data.getU_id();
-					System.out.println(list.size());
-					System.out.println(u_id);
-					System.out.println(T_id);
+				if (T_id.getText().isEmpty()) {
+					L_idx.setText("필수 항목입니다.");
+					L_idx.setForeground(Color.red);
+					L_idx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				if (T_pwd.getText().isEmpty()) {
+					L_pwdx.setText("필수 항목입니다.");
+					L_pwdx.setForeground(Color.red);
+					L_pwdx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				if (T_name.getText().isEmpty()) {
+					L_namex.setText("필수 항목입니다.");
+					L_namex.setForeground(Color.red);
+					L_namex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				if (T_date.getText().equals(" 숫자만 입력가능(ex 20200608)")) {
+					L_datex.setText("필수 항목입니다.");
+					L_datex.setForeground(Color.red);
+					L_datex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				if (T_contact.getText().isEmpty()) {
+					L_contactx.setText("필수 항목입니다.");
+					L_contactx.setForeground(Color.red);
+					L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				if (L_idx.getText() == "해당 아이디는 가입 가능합니다." && L_pwdx.getText().isEmpty() && L_namex.getText().isEmpty()
+						&& L_datex.getText().isEmpty() && L_contactx.getText().isEmpty()) {
+					MemberDAO md = new MemberDAO();
+					if(md.insertMember(T_id.getText(), T_pwd.getText(), T_name.getText(),
+							Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText())==true) {
+						L_msg.setText("회원가입이 완료되었습니다.");
+						Popup.setVisible(true);
+						
+					};
 
 				}
-
 			}
 
 		});
