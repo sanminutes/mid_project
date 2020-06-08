@@ -4,8 +4,6 @@ import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
-public class Login extends WindowAdapter {
+public class Login {
 	JButton[] btn_Arr;
 	Font btn_nomal;
 	JLabel L_YearMonth;
@@ -111,7 +109,6 @@ public class Login extends WindowAdapter {
 		JTextField medical = new JTextField();
 		JTextField date_2 = new JTextField();
 		JButton btn_hospital = new JButton("[°Ë»ö]");
-		
 		p_left.add(btn_prev);
 		p_left.add(btn_next);
 		p_left.add(North);
@@ -317,7 +314,7 @@ public class Login extends WindowAdapter {
 
 		JTable table = new JTable(model);
 		JScrollPane scroll = new JScrollPane(table);
-		table.clearSelection();
+
 		table.setFont(btn_nomal);
 		find_hsp.add(scroll);
 		find_hsp.setResizable(false);
@@ -357,9 +354,5 @@ public class Login extends WindowAdapter {
 				btn_Arr[i].setBackground(Color.white);
 			}
 		}
-	}
-
-	public void windowClosing(WindowEvent e) {
-		System.exit(0);
 	}
 }

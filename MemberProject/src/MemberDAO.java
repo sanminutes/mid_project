@@ -18,7 +18,6 @@ public class MemberDAO {
 	public ArrayList<MemberVo> list(String id) { // 정보 가져오기
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
-		System.out.println("여기야");
 		try {
 			connDB();
 			String find = "SELECT pi.P_ID, pi.P_PWD, ui.U_NAME, ui.U_DATE, ui.U_ADDRESS, ui.U_CONTACT FROM PRIVATE_INFORMATION pi JOIN USER_INFORMATION ui ON pi.u_number= ui.U_NUMBER WHERE p_id = '"
@@ -63,8 +62,8 @@ public class MemberDAO {
 			}
 
 			String u_insert = "insert all " + "into user_information values(" + (u_max + 1) + ",'" + name + "','" + date
-					+ "','" + address + "','" + contact + "')" + " into private_information values(" + (p_max + 1) + ",'"
-					+ id + "','" + pwd + "'," + (u_max) + "," + "''" + ")" + " SELECT * from dual";
+					+ "','" + address + "','" + contact + "')" + " into private_information values(" + (p_max + 1)
+					+ ",'" + id + "','" + pwd + "'," + (u_max + 1) + "," + "''" + ")" + " SELECT * from dual";
 			rs = stmt.executeQuery(u_insert);
 			join_result = true;
 			// 아이디 결과값이 없으면 가입ok
@@ -72,7 +71,6 @@ public class MemberDAO {
 			// --------------------------------------------[유저계정 저장하기 위한 쿼리]
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(e);
 		}
 		return join_result;
 	}

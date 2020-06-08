@@ -3,7 +3,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -59,6 +58,9 @@ public class MemberTest extends WindowAdapter {
 		btn_find.setFont(btn_nomal);
 		btn_login.setFont(btn_nomal);
 
+
+
+
 		btn_login.addActionListener(new ActionListener() { // 로그인 버튼
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -71,16 +73,17 @@ public class MemberTest extends WindowAdapter {
 					Tfd.setText("  비밀번호를 입력해주세요.");
 				} else {
 					ArrayList<MemberVo> list = oct.list(Tid.getText());
-					MemberVo data = (MemberVo) list.get(0);
-					if (data.getU_pwd().equals(Tpwd.getText())) {
-						Tid.setText("");
-						Tpwd.setText("");
-						f.dispose();
-						Login SP = new Login();
-						SP.main_hospital(data);
-					} else {
+					if (list.size() == 0) {
 						Tfd.setText("  아이디와 비밀번호를 확인해주세요.");
+					} else {
+						MemberVo data = (MemberVo) list.get(0);
+						if (data.getU_pwd().equals(Tpwd.getText())) {
+							f.dispose();
+							Login SP = new Login();
+							SP.main_hospital(data);
+						}
 					}
+
 				}
 			}
 		});
@@ -95,10 +98,18 @@ public class MemberTest extends WindowAdapter {
 		});
 
 		f.setVisible(true); // 창을 화면에 나타낼 것인지 설정
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+		// f.setVisible(true)를 사용하게되면 프로세스에 남아 안꺼지는 경우가 있으므로 위와 같은 코드를 입력해주어야함.
 	}
+
+
 
 	public static void main(String args[]) {
 		MemberTest ff = new MemberTest();
 
 	}
+	
+    public void windowClosed(WindowEvent e) {
+    	f.dispose();
+    }
 }

@@ -11,9 +11,12 @@ public class MemberVo {
 	private String h_name;
 	private String h_address;
 	private String h_contact;
-	private String T_id;
 
 	public MemberVo() {
+	}
+
+	public MemberVo(String u_id) {
+		this.u_id = u_id;
 	}
 
 	public MemberVo(String h_name, String h_address, String h_contact) {
@@ -119,11 +122,4 @@ public class MemberVo {
 		this.h_contact = h_contact;
 	}
 
-	public String getT_id() {
-		return T_id;
-	}
-
-	public void setT_id(String t_id) {
-		this.T_id = t_id;
-	}
 }

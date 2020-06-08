@@ -57,6 +57,7 @@ public class membership {
 		JButton btn_back = new JButton("돌아가기");
 		Popup = new JDialog(fjoin, "병원 진료 예약 시스템", true);
 		L_msg = new JLabel();
+		JButton ok = new JButton("확인");
 		btn_create.setFont(btn_nomal);
 		btn_back.setFont(btn_nomal);
 		btn_create.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
@@ -92,9 +93,21 @@ public class membership {
 		btn_create.setBounds(40, 450, 120, 25);
 		btn_back.setBounds(180, 450, 120, 25);
 		Popup.setLayout(null);
-		L_msg.setBounds(70,20,200,25);
-		L_msg.setFont(new Font("나눔바른고딕",Font.PLAIN,14));
-		
+		L_msg.setBounds(70, 20, 200, 25);
+		L_msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+		ok.setBounds(100, 60, 60, 25);
+		ok.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+		ok.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Popup.dispose();
+				fjoin.dispose();
+				MemberTest mt = new MemberTest();
+			}
+
+		});
 		Popup.setSize(300, 150);
 		Popup.setLocation(24, 150);
 
@@ -121,6 +134,7 @@ public class membership {
 		fjoin.add(btn_create);
 		fjoin.add(btn_back);
 		Popup.add(L_msg);
+		Popup.add(ok);
 		L_msg.setVisible(true);
 
 		T_id.addFocusListener(new FocusListener() { // 아이디 유효성 검사
@@ -296,7 +310,6 @@ public class membership {
 
 		});
 		btn_create.addActionListener(new ActionListener() { // 가입 버튼
-			private MemberVo memberVo;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -327,17 +340,24 @@ public class membership {
 					L_contactx.setForeground(Color.red);
 					L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				}
-				if (L_idx.getText() == "해당 아이디는 가입 가능합니다." && L_pwdx.getText().isEmpty() && L_namex.getText().isEmpty()
-						&& L_datex.getText().isEmpty() && L_contactx.getText().isEmpty()) {
-					MemberDAO md = new MemberDAO();
-					if(md.insertMember(T_id.getText(), T_pwd.getText(), T_name.getText(),
-							Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText())==true) {
-						L_msg.setText("회원가입이 완료되었습니다.");
-						Popup.setVisible(true);
-						
-					};
+				if (group1.getSelectedCheckbox().toString().contains("환자")) {
+					// 라디오 박스 1번이 환자인지 확인하는 코드
+					if (L_idx.getText() == "해당 아이디는 가입 가능합니다." && L_pwdx.getText().isEmpty()
+							&& L_namex.getText().isEmpty() && L_datex.getText().isEmpty()
+							&& L_contactx.getText().isEmpty()) {
+						MemberDAO md = new MemberDAO();
+						if (md.insertMember(T_id.getText(), T_pwd.getText(), T_name.getText(),
+								Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText()) == true) {
+							L_msg.setText("회원가입이 완료되었습니다.");
+							Popup.setVisible(true);
 
+						}
+					}
+				} else if (group1.getSelectedCheckbox().toString().contains("의사")) {
+					// 라디오 박스 2번이 의사인지 확인하는 코드
+					System.out.println("죽었냐");
 				}
+
 			}
 
 		});
