@@ -11,7 +11,9 @@ public class Hospital_Sql_Vo {
 	private String h_name;
 	private String h_address;
 	private String h_contact;
-
+	private String d_number;
+	private String d_hospital;
+	private String d_medical;
 
 	public Hospital_Sql_Vo() {
 	}
@@ -20,20 +22,38 @@ public class Hospital_Sql_Vo {
 		this.u_id = u_id;
 	}
 
-
 	public Hospital_Sql_Vo(String h_name, String h_address, String h_contact) {
 		this.h_name = h_name;
 		this.h_address = h_address;
 		this.h_contact = h_contact;
 	}
 
-	public Hospital_Sql_Vo(String u_id, String u_pwd, String u_name, int u_date, String u_address, String u_contact) {
-		this.u_id = u_id;
-		this.u_pwd = u_pwd;
+	public Hospital_Sql_Vo(String u_name, int u_date, String u_address, String u_contact, String u_id, String u_pwd,
+			String u_number, String d_number) {
+
 		this.u_name = u_name;
 		this.u_date = u_date;
 		this.u_address = u_address;
 		this.u_contact = u_contact;
+		this.u_id = u_id;
+		this.u_pwd = u_pwd;
+		this.u_number = u_number;
+		this.d_number = d_number;
+	}
+
+	public Hospital_Sql_Vo(String u_name, int u_date, String u_address, String u_contact, String u_id, String u_pwd,
+			String d_hospital, String d_medical, String u_number, String d_number) {
+
+		this.u_name = u_name;
+		this.u_date = u_date;
+		this.u_address = u_address;
+		this.u_contact = u_contact;
+		this.d_hospital = d_hospital;
+		this.d_medical = d_medical;
+		this.u_id = u_id;
+		this.u_pwd = u_pwd;
+		this.u_number = u_number;
+		this.d_number = d_number;
 	}
 
 	public String getU_id() {
@@ -124,5 +144,28 @@ public class Hospital_Sql_Vo {
 		this.h_contact = h_contact;
 	}
 
+	public String getD_number() {
+		return d_number;
+	}
+
+	public void setD_number(String p_number) {
+		this.d_number = d_number;
+	}
+
+	public String getD_hospital() {
+		return d_hospital;
+	}
+
+	public void setD_hospital(String d_hospital) {
+		this.d_hospital = d_hospital;
+	}
+
+	public String getD_medical() {
+		return d_medical;
+	}
+
+	public void setD_medical(String d_medical) {
+		this.d_medical = d_medical;
+	}
 
 }

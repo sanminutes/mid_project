@@ -390,7 +390,6 @@ public class Hospital_sign {
 							&& L_namex.getText().isEmpty() && L_datex.getText().isEmpty()
 							&& L_contactx.getText().isEmpty() && L_hospitalx.getText().isEmpty()
 							&& L_medicalx.getText().isEmpty()) {
-						System.out.println("¿©±â´Â?");
 						Hospital_Sql md = new Hospital_Sql();
 						if (md.insertdoctor(T_id.getText(), T_pwd.getText(), T_name.getText(),
 								Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText(),
@@ -452,7 +451,7 @@ public class Hospital_sign {
 						Hospital_Sql oct = new Hospital_Sql();
 						ArrayList<Hospital_Sql_Vo> hoslist = oct.hoslist(T_hospital.getText());
 						Main_User lg = new Main_User();
-						lg.find_hospital(hoslist);
+						lg.find_hospital(1);
 
 					}
 

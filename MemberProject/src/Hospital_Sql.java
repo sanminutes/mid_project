@@ -20,19 +20,57 @@ public class Hospital_Sql {
 		ArrayList<Hospital_Sql_Vo> list = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
-
-			String find = "SELECT pi.P_ID, pi.P_PWD, ui.U_NAME, ui.U_DATE, ui.U_ADDRESS, ui.U_CONTACT FROM PRIVATE_INFORMATION pi JOIN USER_INFORMATION ui ON pi.u_number= ui.U_NUMBER WHERE p_id = '"
-					+ id + "'";
-			rs = stmt.executeQuery(find);
+			String find_id = "select * from private_information where p_id='" + id + "'";
+			rs = stmt.executeQuery(find_id);
+			int u_number = 0, d_number = 0;
 			while (rs.next()) {
-				String u_id = rs.getString(1);
-				String u_pwd = rs.getString(2);
-				String u_name = rs.getString(3);
-				int u_date = rs.getInt(4);
-				String u_address = rs.getString(5);
-				String u_contact = rs.getString(6);
-				Hospital_Sql_Vo pvinfo = new Hospital_Sql_Vo(u_id, u_pwd, u_name, u_date, u_address, u_contact);
-				list.add(pvinfo);
+				u_number = rs.getInt(4);
+				d_number = rs.getInt(5);
+			}
+			if (u_number == 0) { // null값이면 로그인 대상은 '의사'
+				String find_info = "SELECT di.d_name, di.d_date, di.d_address, di.d_contact, hi.H_NAME, di.d_medical,"
+						+ " pi2.p_id, pi2.p_pwd, pi2.u_NUMBER, di.d_number" + " FROM DOCTOR_INFORMATION di"
+						+ " INNER JOIN private_information pi2 ON di.D_NUMBER = pi2.D_NUMBER"
+						+ " INNER JOIN HOSPITAL_INFORMATION hi ON di.D_HOSPITAL = hi.H_NUMBER where pi2.p_id ='" + id
+						+ "'";
+				rs = stmt.executeQuery(find_info);
+				while (rs.next()) {
+
+					String u_name = rs.getString(1);
+					int u_date = rs.getInt(2);
+					String u_address = rs.getString(3);
+					String u_contact = rs.getString(4);
+					String d_hospital = rs.getString(5);
+					String d_medical = rs.getString(6);
+					String u_id = rs.getString(7);
+					String u_pwd = rs.getString(8);
+					String u_num = rs.getString(9);
+					String d_num = rs.getString(10);
+					Hospital_Sql_Vo pvinfo = new Hospital_Sql_Vo(u_name, u_date, u_address, u_contact, u_id, u_pwd,
+							d_hospital, d_medical, u_num, d_num);
+					list.add(pvinfo);
+				}
+			} else if (d_number == 0) { // null값이면 로그인 대상은 '환자'
+
+				String find_info = "select distinct ui.u_name, ui.u_date, ui.u_address, ui.u_contact, pi2.p_id, pi2.p_pwd, ui.u_number, pi2.D_NUMBER"
+						+ " from user_information ui INNER JOIN private_information pi2"
+						+ " ON ui.U_NUMBER = pi2.U_NUMBER" + " WHERE p_id = '" + id + "'";
+				rs = stmt.executeQuery(find_info);
+				while (rs.next()) {
+
+					String u_name = rs.getString(1);
+					int u_date = rs.getInt(2);
+					String u_address = rs.getString(3);
+					String u_contact = rs.getString(4);
+					String u_id = rs.getString(5);
+					String u_pwd = rs.getString(6);
+					String u_num = rs.getString(7);
+					String d_num = rs.getString(8);
+					Hospital_Sql_Vo pvinfo = new Hospital_Sql_Vo(u_name, u_date, u_address, u_contact, u_id, u_pwd,
+							u_num, d_num);
+					list.add(pvinfo);
+				}
+
 			}
 
 		} catch (Exception e) {
@@ -140,13 +178,13 @@ public class Hospital_Sql {
 		return hoslist;
 	}
 
-	public ArrayList<Hospital_Sql_Vo> medical_list(String h_name, String h_contact) {
+	public ArrayList<Hospital_Sql_Vo> medical_list(String h_name, String h_address) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<Hospital_Sql_Vo> medical_list = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
 			String hospital_number = "select * from hospital_information where h_name ='" + h_name + "' and h_address='"
-					+ h_contact + "'";
+					+ h_address + "'";
 			rs = stmt.executeQuery(hospital_number);
 			int hospital_n = 0;
 			while (rs.next()) {

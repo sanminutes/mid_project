@@ -74,13 +74,25 @@ public class Hospital_loginform {
 				} else {
 					ArrayList<Hospital_Sql_Vo> list = oct.list(Tid.getText());
 					if (list.size() == 0) {
-						Tfd.setText("  아이디와 비밀번호를 확인해주세요.");
+						Tfd.setText("  해당 아이디는 존재하지 않습니다.");
 					} else {
 						Hospital_Sql_Vo data = (Hospital_Sql_Vo) list.get(0);
 						if (data.getU_pwd().equals(Tpwd.getText())) {
 							f.dispose();
-							Main_User SP = new Main_User();
-							SP.main_hospital(data);
+							if(data.getD_number()==null&&data.getU_number()!=null) { //환자
+								Main_User SP = new Main_User();
+								SP.main_hospital_user(data);
+							}else if(data.getD_number()!=null&&data.getU_number()==null){ //의사
+								Main_Doctor MD = new Main_Doctor();
+								MD.main_hospital_doctor(data);
+								
+								
+							}
+
+	
+
+						}else {
+							Tfd.setText("  아이디와 비밀번호를 확인해주세요.");
 						}
 					}
 
