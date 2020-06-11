@@ -26,20 +26,22 @@ public class Hospital_sign {
 
 	static JTextField T_hospital;
 	static JComboBox<String> T_medical;
+	Hospital_Sql HS = new Hospital_Sql();
+	Main_User lg = new Main_User();
 
 	public void join_choice() { // 회원가입
 		fjoin = new JFrame("병원 진료 예약 시스템");
 		btn_nomal = new Font("나눔바른고딕", Font.PLAIN, 12);
 		fjoin.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		fjoin.setLayout(null);
-		fjoin.setSize(350, 540);
+		fjoin.setSize(400, 540);
 		fjoin.setResizable(false);
 		CheckboxGroup group1 = new CheckboxGroup();
 		Checkbox doctor = new Checkbox(" 의사", group1, true);
 		Checkbox user = new Checkbox(" 환자", group1, true);
 		doctor.setFont(btn_nomal);
 		user.setFont(btn_nomal);
-		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'에 Check]");
+		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'를 선택해 주십시요.]");
 		JLabel L_id = new JLabel("아이디 : ");
 		L_idx = new JLabel();
 		JLabel L_pwd = new JLabel("비밀번호 : ");
@@ -74,7 +76,7 @@ public class Hospital_sign {
 		L_date.setFont(btn_nomal);
 		L_address.setFont(btn_nomal);
 		L_contact.setFont(btn_nomal);
-		Lmessage1.setBounds(36, 40, 320, 25);
+		Lmessage1.setBounds(40, 40, 320, 25);
 		doctor.setBounds(120, 80, 60, 25);
 		user.setBounds(240, 80, 60, 25);
 		L_id.setBounds(40, 120, 60, 25);
@@ -89,14 +91,14 @@ public class Hospital_sign {
 		L_address.setBounds(40, 280, 60, 25);
 		L_contact.setBounds(40, 320, 60, 25);
 		L_contactx.setBounds(40, 340, 300, 25);
-		T_id.setBounds(120, 120, 180, 25);
-		T_pwd.setBounds(120, 160, 180, 25);
-		T_name.setBounds(120, 200, 180, 25);
-		T_date.setBounds(120, 240, 180, 25);
-		T_address.setBounds(120, 280, 180, 25);
-		T_contact.setBounds(120, 320, 180, 25);
+		T_id.setBounds(120, 120, 230, 25);
+		T_pwd.setBounds(120, 160, 230, 25);
+		T_name.setBounds(120, 200, 230, 25);
+		T_date.setBounds(120, 240, 230, 25);
+		T_address.setBounds(120, 280, 230, 25);
+		T_contact.setBounds(120, 320, 230, 25);
 		btn_create.setBounds(40, 450, 120, 25);
-		btn_back.setBounds(180, 450, 120, 25);
+		btn_back.setBounds(230, 450, 120, 25);
 		Popup.setLayout(null);
 		L_msg.setBounds(70, 20, 200, 25);
 		L_msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
@@ -351,8 +353,7 @@ public class Hospital_sign {
 					if (L_idx.getText() == "해당 아이디는 가입 가능합니다." && L_pwdx.getText().isEmpty()
 							&& L_namex.getText().isEmpty() && L_datex.getText().isEmpty()
 							&& L_contactx.getText().isEmpty()) {
-						Hospital_Sql md = new Hospital_Sql();
-						if (md.inseruser(T_id.getText(), T_pwd.getText(), T_name.getText(),
+						if (HS.inseruser(T_id.getText(), T_pwd.getText(), T_name.getText(),
 								Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText()) == true) {
 							L_msg.setText("회원가입이 완료되었습니다.");
 							Popup.setVisible(true);
@@ -390,8 +391,7 @@ public class Hospital_sign {
 							&& L_namex.getText().isEmpty() && L_datex.getText().isEmpty()
 							&& L_contactx.getText().isEmpty() && L_hospitalx.getText().isEmpty()
 							&& L_medicalx.getText().isEmpty()) {
-						Hospital_Sql md = new Hospital_Sql();
-						if (md.insertdoctor(T_id.getText(), T_pwd.getText(), T_name.getText(),
+						if (HS.insertdoctor(T_id.getText(), T_pwd.getText(), T_name.getText(),
 								Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText(),
 								T_hospital.getText(), T_medical.getSelectedItem().toString()) == true) {
 							L_msg.setText("회원가입이 완료되었습니다.");
@@ -420,8 +420,8 @@ public class Hospital_sign {
 				Main_User lg = new Main_User();
 				T_hospital = new JTextField();
 				T_medical = new JComboBox();
-				T_medical.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-				System.out.println();
+				T_medical.addItem("먼저 병원을 선택하세요");
+				T_medical.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				btn_hospital = new JButton("[검색]");
 				L_hospital.setFont(btn_nomal);
 				L_medical.setFont(btn_nomal);
@@ -437,9 +437,9 @@ public class Hospital_sign {
 				L_hospitalx.setBounds(40, 380, 100, 25);
 				L_medical.setBounds(40, 400, 100, 25);
 				L_medicalx.setBounds(40, 420, 100, 25);
-				T_hospital.setBounds(120, 360, 120, 25);
-				T_medical.setBounds(120, 400, 180, 25);
-				btn_hospital.setBounds(240, 360, 70, 25);
+				T_hospital.setBounds(120, 360, 170, 25);
+				T_medical.setBounds(120, 400, 230, 25);
+				btn_hospital.setBounds(290, 360, 70, 25);
 				btn_hospital.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 				btn_hospital.setBorderPainted(false);
 
@@ -448,9 +448,8 @@ public class Hospital_sign {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						Hospital_Sql oct = new Hospital_Sql();
-						ArrayList<Hospital_Sql_Vo> hoslist = oct.hoslist(T_hospital.getText());
-						Main_User lg = new Main_User();
+
+						ArrayList<Hospital_Sql_Vo> hoslist = HS.hoslist(T_hospital.getText());
 						lg.find_hospital(1);
 
 					}

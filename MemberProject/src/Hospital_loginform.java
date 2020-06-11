@@ -13,7 +13,9 @@ public class Hospital_loginform {
 	Checkbox doctor, user;
 	Calendar date = Calendar.getInstance();
 	Font btn_nomal;
-
+	Hospital_sign TP = new Hospital_sign();
+	Main_User SP = new Main_User();
+	Main_Doctor MD = new Main_Doctor();
 	Hospital_loginform() {
 		f = new JFrame("병원 진료 예약 시스템");
 		f.setSize(350, 500);
@@ -80,10 +82,8 @@ public class Hospital_loginform {
 						if (data.getU_pwd().equals(Tpwd.getText())) {
 							f.dispose();
 							if(data.getD_number()==null&&data.getU_number()!=null) { //환자
-								Main_User SP = new Main_User();
 								SP.main_hospital_user(data);
 							}else if(data.getD_number()!=null&&data.getU_number()==null){ //의사
-								Main_Doctor MD = new Main_Doctor();
 								MD.main_hospital_doctor(data);
 								
 								
@@ -104,7 +104,6 @@ public class Hospital_loginform {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				f.dispose();
-				Hospital_sign TP = new Hospital_sign();
 				TP.join_choice();
 			}
 		});

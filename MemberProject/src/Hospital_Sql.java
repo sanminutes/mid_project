@@ -155,6 +155,7 @@ public class Hospital_Sql {
 		return join_result;
 	}
 
+	// JTABLE에 검색된 병원 이름, 주소, 연락처를 출력하기 위함
 	public ArrayList<Hospital_Sql_Vo> hoslist(String hospital) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<Hospital_Sql_Vo> hoslist = new ArrayList<Hospital_Sql_Vo>();
@@ -178,6 +179,7 @@ public class Hospital_Sql {
 		return hoslist;
 	}
 
+	// 해당 병원에서 진료중인 과목들 출력
 	public ArrayList<Hospital_Sql_Vo> medical_list(String h_name, String h_address) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<Hospital_Sql_Vo> medical_list = new ArrayList<Hospital_Sql_Vo>();
@@ -203,6 +205,35 @@ public class Hospital_Sql {
 		}
 
 		return medical_list;
+	}
+
+	// 해당 병원에서 진료중인 과목들 출력
+	public ArrayList<Hospital_Sql_Vo> doctor_list(String h_name, String h_address, String medical) {
+		// ArrayList는 자바에서 지원하는 자료구조..
+		ArrayList<Hospital_Sql_Vo> doctor_list = new ArrayList<Hospital_Sql_Vo>();
+		try {
+			connDB();
+			String hospital_number = "select * from hospital_information where h_name ='" + h_name + "' and h_address='"
+					+ h_address + "'";
+			rs = stmt.executeQuery(hospital_number);
+			int hospital_n = 0;
+			while (rs.next()) {
+				hospital_n = rs.getInt(1);
+			}
+			String findB = "select d_name from doctor_information where d_hospital=" + hospital_n + " and d_medical='"
+					+ medical + "'";
+			rs = stmt.executeQuery(findB);
+			while (rs.next()) {
+				String u_name = rs.getString(1);
+				Hospital_Sql_Vo doctor_info = new Hospital_Sql_Vo(u_name);
+				doctor_list.add(doctor_info);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return doctor_list;
 	}
 
 	public void connDB() {
