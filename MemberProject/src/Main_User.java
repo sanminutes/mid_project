@@ -1,13 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Label;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +14,7 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,16 +32,19 @@ public class Main_User implements ActionListener {
 	JTextField hospital, date_2;
 	JComboBox<String> doctor;
 	JComboBox<String> medical;
+	JComboBox<String> date_3;
 	int year, month;
 	JTable table;
 	JScrollPane Scroll;
 	JPanel P;
-	Hospital_Sql oct = new Hospital_Sql();
+	Hospital_Sql HS = new Hospital_Sql();
 	Vector<String> userColumn = new Vector<String>();
 	DefaultTableModel model;
 	String result_name, result_address;
 	SimpleDateFormat d_time;
 	long systemTime;
+	String number, h_medical;
+	int restr, d_number;
 
 	public void main_hospital_user(Hospital_Sql_Vo data) { // 로그인 성공시
 		JFrame fmain_user = new JFrame("병원 진료 예약 시스템");
@@ -65,7 +67,7 @@ public class Main_User implements ActionListener {
 		JPanel title_thu = new JPanel();
 		JPanel title_fri = new JPanel();
 		JPanel title_sat = new JPanel();
-		JLabel y_title = new JLabel("[ 예 약 정 보 입 력 ]");
+		JLabel y_title = new JLabel("[예약 정보 입력란]");
 		JLabel y_name = new JLabel("이름 :");
 		JLabel y_date = new JLabel("생년월일 :");
 		JLabel y_address = new JLabel("주소 :");
@@ -75,8 +77,28 @@ public class Main_User implements ActionListener {
 		JLabel y_date_2 = new JLabel("예약 시간 :");
 		JLabel y_doctor = new JLabel("담당 의사 :");
 		JLabel y_date3 = new JLabel("예약 날짜 :");
-
 		JButton btn_logout = new JButton("[접속종료]");
+		JButton btn_send = new JButton("예　　 약");
+		JButton btn_cancel = new JButton("취　　 소");
+		btn_cancel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				medical.removeAllItems();
+				doctor.removeAllItems();
+				date_3.removeAllItems();
+				hospital.setText("");
+				medical.addItem("먼저 병원을 입력해 주세요");
+				medical.setEnabled(false);
+				doctor.setEnabled(false);
+				doctor.addItem("먼저 병원을 입력해 주세요");
+				date_2.setText("");
+				date_3.addItem("날짜 선택 후 시간 선택 가능");
+				date_3.setEnabled(false);
+			}
+
+		});
 		JLabel Date_format = new JLabel();
 		JLabel message_one = new JLabel(" ■ 희망하는 진료 예약일자를 선택해주세요");
 		// -------------------------[실시간 시간 구하기]
@@ -84,6 +106,7 @@ public class Main_User implements ActionListener {
 		d_time = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 		Date_format.setText(d_time.format(systemTime));
 		Date_format.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+		String tmp = d_time.format(systemTime).replaceAll("[^0-9]", "");
 		JPanel North = new JPanel();
 		JPanel South = new JPanel();
 		North.setLayout(null);
@@ -131,19 +154,71 @@ public class Main_User implements ActionListener {
 		hospital = new JTextField();
 		hospital.setEditable(false);
 		medical = new JComboBox<String>();
-		medical.addItem("먼저 병원을 선택하세요");
+		medical.setEnabled(false);
+		medical.addItem("먼저 병원을 입력해 주세요");
 		medical.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+
+		btn_send.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (!name.getText().isEmpty() && !date_1.getText().isEmpty() && !contact.getText().isEmpty()
+						&& !hospital.getText().isEmpty() && !medical.getSelectedItem().equals("먼저 병원을 선택하세요")
+						&& !doctor.getSelectedItem().equals("먼저 병원을 선택하세요") && !date_2.getText().isEmpty()
+						&& !date_3.getSelectedItem().equals("예약 가능한 시간이 없습니다")) {
+					if (HS.schedule(Integer.parseInt(data.getU_number()), d_number, date_2.getText(),
+							date_3.getSelectedItem().toString()) == true) {
+						JDialog send_ok = new JDialog(fmain_user, "예약 안내", true);
+						send_ok.setBounds(420, 250, 200, 150);
+						send_ok.setLayout(null);
+						JLabel msg = new JLabel("진료 예약이 되었습니다.");
+						msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						JButton send_yes = new JButton("확인");
+						send_yes.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								// TODO Auto-generated method stub
+								send_ok.dispose();
+								medical.removeAllItems();
+								doctor.removeAllItems();
+								date_3.removeAllItems();
+								hospital.setText("");
+								medical.addItem("먼저 병원을 입력해 주세요");
+								medical.setEnabled(false);
+								doctor.setEnabled(false);
+								doctor.addItem("먼저 병원을 입력해 주세요");
+								date_2.setText("");
+								date_3.addItem("날짜 선택 후 시간 선택 가능");
+								date_3.setEnabled(false);
+							}
+
+						});
+						send_yes.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						send_yes.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
+						send_ok.add(msg);
+						send_ok.add(send_yes);
+						msg.setBounds(24, 20, 160, 25);
+						send_yes.setBounds(60, 60, 60, 25);
+						send_ok.setVisible(true);
+
+					}
+				} else {
+					System.out.println("먼저 병원명을 찾아 선택하신 후, 진료과목, 담당의사, 예약날짜, 예약시간을 입력해주시기 바랍니다.");
+				}
+			}
+
+		});
 		medical.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
 				doctor.removeAllItems();
-				Hospital_Sql HS = new Hospital_Sql();
 				ArrayList<Hospital_Sql_Vo> doctor_list = HS.doctor_list(result_name, result_address,
 						e.getItem().toString());
 				for (int i = 0; i < doctor_list.size(); i++) {
 					Hospital_Sql_Vo doctor_info = (Hospital_Sql_Vo) doctor_list.get(i);
+					d_number = doctor_info.getU_date();
 					String doctor_name = doctor_info.getU_id();
 					doctor.addItem(doctor_name);
 				}
@@ -154,12 +229,16 @@ public class Main_User implements ActionListener {
 
 		});
 		doctor = new JComboBox<String>();
-		doctor.addItem("선택할 수 없습니다");
+		doctor.setEnabled(false);
+		doctor.addItem("예약 가능한 의사가 없습니다");
 		doctor.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 		doctor.setEditable(false);
 
 		date_2 = new JTextField();
-		JTextField date_3 = new JTextField();
+		date_3 = new JComboBox<String>();
+		date_3.setEnabled(false);
+		date_3.addItem("날짜 선택 후 시간 선택 가능");
+		date_3.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 		JButton btn_hospital = new JButton("[찾기]");
 		date_2.setEditable(false);
 		p_left.add(btn_prev);
@@ -201,6 +280,9 @@ public class Main_User implements ActionListener {
 		p_right.add(y_doctor);
 		p_right.add(doctor);
 		p_right.add(date_2);
+		p_right.add(btn_send);
+		p_right.add(btn_cancel);
+
 		sun.setForeground(Color.white);
 		mon.setForeground(Color.white);
 		tue.setForeground(Color.white);
@@ -211,45 +293,47 @@ public class Main_User implements ActionListener {
 		message_one.setBounds(10, 8, 300, 25);
 		message_one.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
 		p_left.add(Center_p);
-		name.setBounds(130, 100, 210, 25);
-		date_1.setBounds(130, 140, 210, 25);
-		address.setBounds(130, 180, 210, 25);
-		contact.setBounds(130, 220, 210, 25);
-		hospital.setBounds(130, 260, 160, 25);
-		medical.setBounds(130, 300, 210, 25);
-		doctor.setBounds(130, 340, 210, 25);
-		date_2.setBounds(130, 380, 210, 25);
-		date_3.setBounds(130, 420, 210, 25);
+		name.setBounds(130, 80, 210, 25);
+		date_1.setBounds(130, 120, 210, 25);
+		address.setBounds(130, 160, 210, 25);
+		contact.setBounds(130, 200, 210, 25);
+		hospital.setBounds(130, 240, 160, 25);
+		medical.setBounds(130, 280, 210, 25);
+		doctor.setBounds(130, 320, 210, 25);
+		date_2.setBounds(130, 360, 210, 25);
+		date_3.setBounds(130, 400, 210, 25);
 
-		btn_hospital.setBounds(290, 260, 70, 25);
+		btn_hospital.setBounds(290, 240, 70, 25);
 		btn_hospital.setFont(btn_nomal);
 		btn_hospital.setBorderPainted(false);
 		btn_hospital.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
-		y_title.setBounds(124, 40, 200, 25); // 예약정보
-		y_title.setFont(new Font("나눔바른고딕", Font.BOLD, 20));
-		y_name.setBounds(40, 100, 200, 25);
+		y_title.setBounds(124, 30, 200, 25); // 예약정보
+		y_title.setFont(new Font("나눔바른고딕", Font.PLAIN, 20));
+		y_name.setBounds(40, 80, 200, 25);
 		y_name.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_date.setBounds(40, 140, 200, 25);
+		y_date.setBounds(40, 120, 200, 25);
 		y_date.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_address.setBounds(40, 180, 200, 25);
+		y_address.setBounds(40, 160, 200, 25);
 		y_address.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_contact.setBounds(40, 220, 200, 25);
+		y_contact.setBounds(40, 200, 200, 25);
 		y_contact.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_hospital.setBounds(40, 260, 200, 25);
+		y_hospital.setBounds(40, 240, 200, 25);
 		y_hospital.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_medical.setBounds(40, 300, 200, 25);
+		y_medical.setBounds(40, 280, 200, 25);
 		y_medical.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_doctor.setBounds(40, 340, 200, 25);
+		y_doctor.setBounds(40, 320, 200, 25);
 		y_doctor.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_date3.setBounds(40, 380, 200, 25);
+		y_date3.setBounds(40, 360, 200, 25);
 		y_date3.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-		y_date_2.setBounds(40, 420, 200, 25);
+		y_date_2.setBounds(40, 400, 200, 25);
 		y_date_2.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
 		btn_prev.setBounds(100, 70, 60, 30);
 		btn_next.setBounds(380, 70, 60, 30);
 		North.setBounds(4, 0, 570, 40);
 		South.setBounds(40, 590, 530, 4);
 		btn_logout.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+		btn_send.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+		btn_cancel.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		btn_prev.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		btn_next.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		North.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
@@ -277,6 +361,10 @@ public class Main_User implements ActionListener {
 		title_fri.setBackground(Color.gray);
 		title_sat.setBackground(Color.blue);
 		btn_logout.setBounds(910, 30, 100, 25);
+		btn_send.setBounds(130, 450, 100, 25);
+		btn_cancel.setBounds(240, 450, 100, 25);
+		btn_send.setFont(btn_nomal);
+		btn_cancel.setFont(btn_nomal);
 		Date_format.setBounds(44, 30, 220, 25);
 		Date_format.setFont(new Font("나눔바른고딕", Font.PLAIN, 16));
 		btn_Arr = new JButton[42]; // 숫자넣어줄버튼들
@@ -292,15 +380,15 @@ public class Main_User implements ActionListener {
 		btn_next.setBorderPainted(false);
 		btn_logout.setBorderPainted(false);
 		btn_logout.setFont(new Font("나눔바른고딕", Font.BOLD, 14));
-		name.setText(" " + data.getU_name());
-		date_1.setText(" " + data.getU_date());
+		name.setText(data.getU_name());
+		date_1.setText(Integer.toString(data.getU_date()));
 		if (data.getU_address() == null) {
 			address.setText(" ");
 		} else {
-			address.setText(" " + data.getU_address());
+			address.setText(data.getU_address());
 		}
 
-		contact.setText(" " + data.getU_contact());
+		contact.setText(data.getU_contact());
 		btn_hospital.addActionListener(new ActionListener() { // 병원 검색
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -357,6 +445,7 @@ public class Main_User implements ActionListener {
 		JLabel hos_name = new JLabel("병원명 :");
 		hos_name.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 		JButton h_btn = new JButton("검색");
+
 		h_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -364,8 +453,7 @@ public class Main_User implements ActionListener {
 				DefaultTableModel model = (DefaultTableModel) table.getModel();
 				model.setNumRows(0);
 				// ---------------------------------------------------------------
-
-				ArrayList<Hospital_Sql_Vo> hoslist = oct.hoslist(find_hospital.getText());
+				ArrayList<Hospital_Sql_Vo> hoslist = HS.hoslist(find_hospital.getText());
 				for (int i = 0; i < hoslist.size(); i++) {
 					Hospital_Sql_Vo hos_data = (Hospital_Sql_Vo) hoslist.get(i);
 					String name = hos_data.getU_name();
@@ -376,6 +464,7 @@ public class Main_User implements ActionListener {
 			}
 
 		});
+
 		userColumn.clear(); // 해당 클래스에서 검색을 연속해서 누를경우 컬럼이 중복으로 증가해서 시작전에 초기화함
 		userColumn.addElement("병원명");
 		userColumn.addElement("주소");
@@ -387,7 +476,6 @@ public class Main_User implements ActionListener {
 			}
 		};
 		table = new JTable(model);
-		table.setLayout(null);
 		table.getColumnModel().getColumn(0).setPreferredWidth(150); // J테이블 내 속성들간의 간격 조절
 		table.getColumnModel().getColumn(1).setPreferredWidth(450);
 		table.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -398,18 +486,17 @@ public class Main_User implements ActionListener {
 				int row = table.getSelectedRow();
 				result_name = (String) table.getValueAt(row, 0);
 				result_address = (String) table.getValueAt(row, 1);
-				Hospital_Sql HS = new Hospital_Sql();
 				ArrayList<Hospital_Sql_Vo> medical_list = HS.medical_list(result_name, result_address);
 				String[] strArr = new String[medical_list.size()];
-
 				if (select_n == 1) {
 					Hospital_sign.T_medical.removeAllItems();
 				} else if (select_n == 2) {
 					medical.removeAllItems();
+					date_3.removeAllItems();
 				}
 				for (int i = 0; i < medical_list.size(); i++) {
 					Hospital_Sql_Vo medical_info = (Hospital_Sql_Vo) medical_list.get(i);
-					String h_medical = medical_info.getU_id();
+					h_medical = medical_info.getU_id();
 					strArr[i] = h_medical;
 					if (select_n == 1) { // 회원가입시
 						find_hsp.dispose();
@@ -419,7 +506,35 @@ public class Main_User implements ActionListener {
 						find_hsp.dispose();
 						hospital.setText(result_name);
 						medical.addItem(strArr[i]);
+						medical.setEnabled(true);
+						doctor.setEnabled(true);
+						date_3.setEnabled(true);
 
+					}
+				}
+				if (select_n == 1) {
+
+				} else if (select_n == 2) {
+					String[] date_Arr = new String[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+							"12:30", "13:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30" };
+					if (!date_2.getText().isEmpty()) {
+						ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), d_number);
+
+						for (int k = 0; k < schedule_find.size(); k++) {//
+							Hospital_Sql_Vo schedule_info = (Hospital_Sql_Vo) schedule_find.get(k);
+							String s_date_3 = schedule_info.getU_id();
+							for (int j = 0; j < date_Arr.length; j++) {
+								if (date_Arr[j].equals(s_date_3)) {
+									date_Arr[j] = "";
+								}
+							}
+						}
+						for (int l = 0; l < date_Arr.length; l++) {
+							System.out.println(date_Arr[l]);
+							if (!date_Arr[l].isEmpty()) {
+								date_3.addItem(date_Arr[l]);
+							}
+						}
 					}
 				}
 			}
@@ -453,7 +568,7 @@ public class Main_User implements ActionListener {
 		P = new JPanel();
 		P.setLayout(new BorderLayout());
 		Scroll = new JScrollPane(table);
-		P.add(Scroll, BorderLayout.CENTER);
+		P.add(Scroll);
 		P.setBounds(4, 0, 680, 200);
 		find_hospital.setBounds(245, 220, 200, 25);
 		hos_name.setBounds(200, 220, 60, 25);
@@ -462,6 +577,7 @@ public class Main_User implements ActionListener {
 		h_btn.setBounds(450, 220, 60, 25);
 
 		find_hsp.add(P);
+
 		find_hsp.add(find_hospital);
 		find_hsp.add(hos_name);
 		find_hsp.add(h_btn);
@@ -470,9 +586,13 @@ public class Main_User implements ActionListener {
 	}
 
 	public void setDays(Calendar date) {
+		Calendar date_r = Calendar.getInstance();
 		Border lineBorder = BorderFactory.createLineBorder(Color.getHSBColor(0.0f, 0.0f, 0.9f), 1);
 		year = date.get(Calendar.YEAR);
 		month = date.get(Calendar.MONTH);
+		int year_r = date_r.get(Calendar.YEAR);
+		int month_r = date_r.get(Calendar.MONTH);
+		int day_r = date_r.get(Calendar.DATE);
 		L_YearMonth.setText(year + " / " + (month + 1));
 		Font YearMonth = new Font("나눔바른고딕", Font.BOLD, 24); // 글씨 폰트변경 위한 객체
 		L_YearMonth.setFont(YearMonth);
@@ -484,16 +604,26 @@ public class Main_User implements ActionListener {
 		for (int i = 0; i < btn_Arr.length; i++, sDay.add(Calendar.DATE, 1)) {
 			btn_Arr[i].setEnabled(true);
 			int day = sDay.get(Calendar.DATE);
-
 			if (day == check) {
 				btn_Arr[i].setLabel(day + "");
 				btn_Arr[i].setBorder(lineBorder);
-
 				check++;
+				if (year_r == year) {
+					if (month_r == month) { // 당월
+						if (day_r >= day) {
+							btn_Arr[i].setEnabled(false);
+						}
+
+					} else if (month_r > month) {
+						btn_Arr[i].setEnabled(false);
+					}
+				} else if (year_r > year) {
+					btn_Arr[i].setEnabled(false);
+				}
 			} else {
 				btn_Arr[i].setLabel("");
-				btn_Arr[i].setEnabled(false);
 				btn_Arr[i].setBorder(lineBorder);
+				btn_Arr[i].setEnabled(false);
 			}
 
 			if (sDay.get(Calendar.MONTH) != month) {
@@ -508,33 +638,46 @@ public class Main_User implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		date_3.removeAllItems();
+		String month_r = Integer.toString(month);
+		String day_r = e.getActionCommand().toString();
+		if (month_r.length() != 2) {
+			month_r = "0" + month_r + 1;
+		}
+		if (day_r.length() != 2) {
+			day_r = "0" + day_r;
+		}
+		date_2.setText(year + "년 " + month + "월 " + e.getActionCommand().toString() + "일");
+		String[] date_Arr = new String[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
+				"13:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30" };
+		if (doctor.getSelectedItem().toString().equals("먼저 병원을 입력해 주세요") && !date_2.getText().isEmpty()) {
+			for (int i = 0; i < date_Arr.length; i++) {
+				date_3.addItem(date_Arr[i]);
+			}
+		}
+		if (!doctor.getSelectedItem().toString().isEmpty() && !date_2.getText().isEmpty()) {
+			ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), d_number);
+			for (int k = 0; k < schedule_find.size(); k++) {//
+				Hospital_Sql_Vo schedule_info = (Hospital_Sql_Vo) schedule_find.get(k);
+				String s_date_3 = schedule_info.getU_id();
+				for (int j = 0; j < date_Arr.length; j++) {
+					if (date_Arr[j].equals(s_date_3)) {
+						date_Arr[j] = "";
+					}
+				}
+			}
+			for (int l = 0; l < date_Arr.length; l++) {
+				if (!date_Arr[l].isEmpty()) {
+					date_3.addItem(date_Arr[l]);
+				}
+			}
+			for (int l = 0; l < date_Arr.length; l++) {
+				if (date_Arr[l].isEmpty()) {
+					date_3.addItem("예약 가능한 시간이 없습니다");
+				}
+			}
 
-		// ----------------------[오늘의 날짜 구하기]
-		String B = d_time.format(systemTime);
-		int restr = Integer.parseInt(B.replaceAll("[^0-9]", ""));
-		// ----------------------[월 자릿수 2자리로 만들기]
-		String month_f = (Integer.toString(month + 1));
-		if (month_f.length() < 2) {
-			month_f = "0" + month_f;
 		}
-		//-----------------------[일 자릿수 2자리로 만들기]
-		String day_f = e.getActionCommand().toString();
-		if (day_f.length() < 2) {
-			day_f = "0" + day_f;
-		}
-		//-----------------------[달력을 눌렀을 때 표시되는 날짜]
-		String A = year +"년 "+ month_f+"월 " + day_f+"일";
-		int flec = Integer.parseInt(A.replaceAll("[^0-9]", ""));
-		//----------------------------------------------
-		
-		if(restr>flec) {
-			System.out.println("오늘 날짜보다 이전으로는 예약이 불가합니다.");
-		}else if(restr==flec) {
-			System.out.println("당일 예약은 불가합니다. 최소 하루전 예약 부탁드립니다.");
-		}else {
-			date_2.setText(A);
-		}
-		
 
 	}
 }

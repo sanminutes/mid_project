@@ -17,6 +17,11 @@ public class Hospital_Sql_Vo {
 		this.id = u_id;
 	}
 
+	public Hospital_Sql_Vo(int date, String u_id) { //int타입 string타입, 변수명 무시
+		this.date = date;
+		this.id = u_id;
+	}
+	
 	public Hospital_Sql_Vo(String name, String address, String contact) {
 		this.name = name;
 		this.address = address;

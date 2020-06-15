@@ -195,8 +195,9 @@ public class Hospital_Sql {
 			String findB = "select * from medical_information where h_number =" + hospital_n;
 			rs = stmt.executeQuery(findB);
 			while (rs.next()) {
+				int m_number = rs.getInt(1);
 				String medical = rs.getString(2);
-				Hospital_Sql_Vo medical_info = new Hospital_Sql_Vo(medical);
+				Hospital_Sql_Vo medical_info = new Hospital_Sql_Vo(m_number, medical);
 				medical_list.add(medical_info);
 			}
 
@@ -220,12 +221,13 @@ public class Hospital_Sql {
 			while (rs.next()) {
 				hospital_n = rs.getInt(1);
 			}
-			String findB = "select d_name from doctor_information where d_hospital=" + hospital_n + " and d_medical='"
-					+ medical + "'";
+			String findB = "select d_number, d_name from doctor_information where d_hospital=" + hospital_n
+					+ " and d_medical='" + medical + "'";
 			rs = stmt.executeQuery(findB);
 			while (rs.next()) {
-				String u_name = rs.getString(1);
-				Hospital_Sql_Vo doctor_info = new Hospital_Sql_Vo(u_name);
+				int d_number = rs.getInt(1);
+				String d_name = rs.getString(2);
+				Hospital_Sql_Vo doctor_info = new Hospital_Sql_Vo(d_number, d_name);
 				doctor_list.add(doctor_info);
 			}
 
@@ -234,6 +236,73 @@ public class Hospital_Sql {
 		}
 
 		return doctor_list;
+	}
+
+//	// 예약 시간 확인
+//	public ArrayList<Hospital_Sql_Vo> schedule_list(int time) {
+//		// ArrayList는 자바에서 지원하는 자료구조..
+//		ArrayList<Hospital_Sql_Vo> schedule_list = new ArrayList<Hospital_Sql_Vo>();
+//		try {
+//			connDB();
+//			String f_time = "select s_time from schedule_info where s_date =" + time;
+//			rs = stmt.executeQuery(f_time);
+//			while (rs.next()) {
+//				String s_time = rs.getString(1);
+//				Hospital_Sql_Vo schedule_info = new Hospital_Sql_Vo(s_time);
+//				schedule_list.add(schedule_info);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		return schedule_list;
+//	}
+
+	// ---------------------------------[예약 정보 저장]
+	public boolean schedule(int u_number, int doctor_n, String date_2, String date_3) { // 가져오기
+		boolean insert_result = false;
+		try {
+			connDB();
+			int date_2_i = Integer.parseInt(date_2.replaceAll("[^0-9]", ""));
+			String max_find = "select max(s_number) from schedule_info";
+			rs = stmt.executeQuery(max_find);
+			int max = 0;
+			while (rs.next()) {
+				max = rs.getInt(1);
+			}
+			String schedule = "insert into schedule_info values(" + (max + 1) + "," + u_number + "," + doctor_n + ","
+					+ date_2_i + ",'" + date_3 + "')";
+			rs = stmt.executeQuery(schedule);
+			insert_result = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return insert_result;
+	}
+	//스케쥴 찾기
+	public ArrayList<Hospital_Sql_Vo> schedule_find(String date_2, int d_number) {
+		// ArrayList는 자바에서 지원하는 자료구조..
+		ArrayList<Hospital_Sql_Vo> schedule_find = new ArrayList<Hospital_Sql_Vo>();
+		try {
+			connDB();
+			int date_2_i = Integer.parseInt(date_2.replaceAll("[^0-9]", ""));
+			String s_find = "select s_date_2, s_date_3 from schedule_info where d_number =" + d_number
+					+ " and s_date_2=" + date_2_i;
+			rs = stmt.executeQuery(s_find);
+			while (rs.next()) {
+				int u_date = rs.getInt(1);
+				String u_id = rs.getString(2);
+				Hospital_Sql_Vo schedule_info = new Hospital_Sql_Vo(u_date, u_id);
+				schedule_find.add(schedule_info);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return schedule_find;
 	}
 
 	public void connDB() {

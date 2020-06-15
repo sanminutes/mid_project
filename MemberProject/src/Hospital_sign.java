@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 public class Hospital_sign {
-	JFrame fjoin;
+	JFrame f_signup;
 	JLabel L_hospital, L_medical, L_idx, L_msg, L_hospitalx, L_medicalx;
 	Font btn_nomal;
 	JTextField T_id;
@@ -30,45 +30,58 @@ public class Hospital_sign {
 	Main_User lg = new Main_User();
 
 	public void join_choice() { // 회원가입
-		fjoin = new JFrame("병원 진료 예약 시스템");
-		btn_nomal = new Font("나눔바른고딕", Font.PLAIN, 12);
-		fjoin.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
-		fjoin.setLayout(null);
-		fjoin.setSize(400, 540);
-		fjoin.setResizable(false);
+		// --------------------------------------------------[2. 회원가입을 위한 프레임 작성]
+		f_signup = new JFrame("병원 진료 예약 시스템");
+		f_signup.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
+		f_signup.setLayout(null);
+		f_signup.setSize(400, 540);
+		f_signup.setResizable(false);
+		// ---------------------------------------------------------------------------
+		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'를 선택해 주십시요.]");
 		CheckboxGroup group1 = new CheckboxGroup();
 		Checkbox doctor = new Checkbox(" 의사", group1, true);
 		Checkbox user = new Checkbox(" 환자", group1, true);
-		doctor.setFont(btn_nomal);
-		user.setFont(btn_nomal);
-		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'를 선택해 주십시요.]");
 		JLabel L_id = new JLabel("아이디 : ");
-		L_idx = new JLabel();
 		JLabel L_pwd = new JLabel("비밀번호 : ");
-		JLabel L_pwdx = new JLabel();
 		JLabel L_name = new JLabel("이름 : ");
-		JLabel L_namex = new JLabel();
 		JLabel L_date = new JLabel("생년월일 : ");
-		JLabel L_datex = new JLabel();
 		JLabel L_address = new JLabel("주소 : ");
 		JLabel L_contact = new JLabel("연락처 : ");
+		// ---------------------------------------------------------------------------
+		L_idx = new JLabel();
+		JLabel L_pwdx = new JLabel();
+		JLabel L_namex = new JLabel();
+		JLabel L_datex = new JLabel();
 		JLabel L_contactx = new JLabel("");
-		JTextField T_name = new JTextField();
-		JTextField T_date = new JTextField(" 숫자만 입력가능(ex 20200608)");
-		T_date.setForeground(Color.LIGHT_GRAY);
-		JTextField T_address = new JTextField();
-		JTextField T_contact = new JTextField();
+		// ---------------------------------------------------------------------------
 		T_id = new JTextField();
 		JTextField T_pwd = new JTextField();
+		JTextField T_name = new JTextField();
+		JTextField T_date = new JTextField(" 숫자만 입력가능(ex 20200608)");
+		JTextField T_address = new JTextField();
+		JTextField T_contact = new JTextField();
+		// ---------------------------------------------------------------------------
 		JButton btn_create = new JButton("가입");
 		JButton btn_back = new JButton("돌아가기");
-		Popup = new JDialog(fjoin, "병원 진료 예약 시스템", true);
+		// --------------------------------------------------[3. 회원가입을 위한 Popup 프레임 작성]
+		btn_nomal = new Font("나눔바른고딕", Font.PLAIN, 12);
+
+		T_date.setForeground(Color.LIGHT_GRAY);
+
+		Popup = new JDialog(f_signup, "병원 진료 예약 시스템", true);
+		Popup.setLayout(null);
 		L_msg = new JLabel();
 		JButton ok = new JButton("확인");
-		btn_create.setFont(btn_nomal);
-		btn_back.setFont(btn_nomal);
+		
+		
+		
 		btn_create.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		btn_back.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
+		doctor.setFont(btn_nomal);
+		user.setFont(btn_nomal);
+		btn_create.setFont(btn_nomal);
+		btn_back.setFont(btn_nomal);
+
 		Lmessage1.setFont(btn_nomal);
 		L_id.setFont(btn_nomal);
 		L_pwd.setFont(btn_nomal);
@@ -99,7 +112,7 @@ public class Hospital_sign {
 		T_contact.setBounds(120, 320, 230, 25);
 		btn_create.setBounds(40, 450, 120, 25);
 		btn_back.setBounds(230, 450, 120, 25);
-		Popup.setLayout(null);
+
 		L_msg.setBounds(70, 20, 200, 25);
 		L_msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 		ok.setBounds(100, 60, 60, 25);
@@ -111,7 +124,7 @@ public class Hospital_sign {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				Popup.dispose();
-				fjoin.dispose();
+				f_signup.dispose();
 				Hospital_loginform mt = new Hospital_loginform();
 			}
 
@@ -119,28 +132,28 @@ public class Hospital_sign {
 		Popup.setSize(300, 150);
 		Popup.setLocation(24, 150);
 
-		fjoin.add(doctor);
-		fjoin.add(user);
-		fjoin.add(L_name);
-		fjoin.add(L_date);
-		fjoin.add(L_address);
-		fjoin.add(L_contact);
-		fjoin.add(Lmessage1);
-		fjoin.add(L_id);
-		fjoin.add(L_pwd);
-		fjoin.add(T_id);
-		fjoin.add(T_pwd);
-		fjoin.add(T_name);
-		fjoin.add(T_date);
-		fjoin.add(T_address);
-		fjoin.add(T_contact);
-		fjoin.add(L_idx);
-		fjoin.add(L_pwdx);
-		fjoin.add(L_namex);
-		fjoin.add(L_datex);
-		fjoin.add(L_contactx);
-		fjoin.add(btn_create);
-		fjoin.add(btn_back);
+		f_signup.add(doctor);
+		f_signup.add(user);
+		f_signup.add(L_name);
+		f_signup.add(L_date);
+		f_signup.add(L_address);
+		f_signup.add(L_contact);
+		f_signup.add(Lmessage1);
+		f_signup.add(L_id);
+		f_signup.add(L_pwd);
+		f_signup.add(T_id);
+		f_signup.add(T_pwd);
+		f_signup.add(T_name);
+		f_signup.add(T_date);
+		f_signup.add(T_address);
+		f_signup.add(T_contact);
+		f_signup.add(L_idx);
+		f_signup.add(L_pwdx);
+		f_signup.add(L_namex);
+		f_signup.add(L_datex);
+		f_signup.add(L_contactx);
+		f_signup.add(btn_create);
+		f_signup.add(btn_back);
 		Popup.add(L_msg);
 		Popup.add(ok);
 
@@ -311,7 +324,7 @@ public class Hospital_sign {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				fjoin.dispose();
+				f_signup.dispose();
 				Hospital_loginform MT = new Hospital_loginform();
 			}
 
@@ -404,8 +417,8 @@ public class Hospital_sign {
 			}
 
 		});
-		fjoin.setVisible(true);
-		fjoin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f_signup.setVisible(true);
+		f_signup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		doctor.addItemListener(new ItemListener() {
 
@@ -419,6 +432,7 @@ public class Hospital_sign {
 				L_medicalx = new JLabel();
 				Main_User lg = new Main_User();
 				T_hospital = new JTextField();
+				T_hospital.setEditable(false);
 				T_medical = new JComboBox();
 				T_medical.addItem("먼저 병원을 선택하세요");
 				T_medical.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
@@ -426,13 +440,13 @@ public class Hospital_sign {
 				L_hospital.setFont(btn_nomal);
 				L_medical.setFont(btn_nomal);
 				btn_hospital.setFont(btn_nomal);
-				fjoin.add(T_hospital);
-				fjoin.add(T_medical);
-				fjoin.add(L_hospital);
-				fjoin.add(L_medical);
-				fjoin.add(L_hospitalx);
-				fjoin.add(L_medicalx);
-				fjoin.add(btn_hospital);
+				f_signup.add(T_hospital);
+				f_signup.add(T_medical);
+				f_signup.add(L_hospital);
+				f_signup.add(L_medical);
+				f_signup.add(L_hospitalx);
+				f_signup.add(L_medicalx);
+				f_signup.add(btn_hospital);
 				L_hospital.setBounds(40, 360, 100, 25);
 				L_hospitalx.setBounds(40, 380, 100, 25);
 				L_medical.setBounds(40, 400, 100, 25);
@@ -442,7 +456,6 @@ public class Hospital_sign {
 				btn_hospital.setBounds(290, 360, 70, 25);
 				btn_hospital.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 				btn_hospital.setBorderPainted(false);
-
 				btn_hospital.addActionListener(new ActionListener() {
 
 					@Override
