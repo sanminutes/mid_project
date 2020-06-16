@@ -1,10 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dialog;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +25,9 @@ public class Main_User implements ActionListener {
 	JButton[] btn_Arr;
 	Font btn_nomal;
 	JLabel L_YearMonth;
-	String result_h, result_i;
+	String result_h, result_i, result_name, result_address, h_medical;
 	JTextField hospital, date_2;
-	JComboBox<String> doctor;
-	JComboBox<String> medical;
-	JComboBox<String> date_3;
+	JComboBox<String> doctor, medical, date_3;
 	int year, month;
 	JTable table;
 	JScrollPane Scroll;
@@ -40,10 +35,8 @@ public class Main_User implements ActionListener {
 	Hospital_Sql HS = new Hospital_Sql();
 	Vector<String> userColumn = new Vector<String>();
 	DefaultTableModel model;
-	String result_name, result_address;
 	SimpleDateFormat d_time;
 	long systemTime;
-	String number, h_medical;
 	int restr, d_number;
 
 	public void main_hospital_user(Hospital_Sql_Vo data) { // 로그인 성공시
@@ -200,17 +193,75 @@ public class Main_User implements ActionListener {
 						msg.setBounds(24, 20, 160, 25);
 						send_yes.setBounds(60, 60, 60, 25);
 						send_ok.setVisible(true);
-
 					}
+				}else if (date_2.getText().isEmpty()) {
+					JDialog msg = new JDialog(fmain_user, "예약 안내", true);
+					JLabel msg_1 = new JLabel("예약 정보 입력란에 미입력 부분이 있습니다");
+					JLabel msg_2 = new JLabel("빠짐없이 입력해주셔야 예약이 가능합니다");
+					JButton ok = new JButton("확인");
+					ok.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// TODO Auto-generated method stub
+							msg.dispose();
+						}
+
+					});
+					msg.setBounds(420, 250, 320, 150);
+					msg_1.setBounds(36, 20, 300, 25);
+					msg_2.setBounds(38, 40, 300, 25);
+					ok.setBounds(70, 70, 160, 25);
+					ok.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+					ok.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
+					msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+					msg_1.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+					msg_2.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+
+					msg.setLayout(null);
+					msg.add(msg_1);
+					msg.add(msg_2);
+					msg.add(ok);
+					msg.setVisible(true);
 				} else {
-					System.out.println("먼저 병원명을 찾아 선택하신 후, 진료과목, 담당의사, 예약날짜, 예약시간을 입력해주시기 바랍니다.");
+					if (date_3.getSelectedItem().toString().equals("예약 가능한 시간이 없습니다")) {
+						JDialog msg = new JDialog(fmain_user, "예약 안내", true);
+						JLabel msg_1 = new JLabel("예약 가능한 시간이 없습니다");
+						JLabel msg_2 = new JLabel("다른 시간으로 예약해 주세요.");
+						JButton ok = new JButton("확인");
+						ok.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								// TODO Auto-generated method stub
+								msg.dispose();
+							}
+
+						});
+						msg.setBounds(420, 250, 250, 150);
+						msg_1.setBounds(40, 20, 160, 25);
+						msg_2.setBounds(40, 40, 160, 25);
+						ok.setBounds(40, 70, 160, 25);
+						ok.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						ok.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
+						msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						msg_1.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						msg_2.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+
+						msg.setLayout(null);
+						msg.add(msg_1);
+						msg.add(msg_2);
+						msg.add(ok);
+						msg.setVisible(true);
+					}
 				}
+
 			}
 
 		});
 		medical.addItemListener(new ItemListener() {
 
-			@Override
+	@Override
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
 				doctor.removeAllItems();
@@ -530,7 +581,6 @@ public class Main_User implements ActionListener {
 							}
 						}
 						for (int l = 0; l < date_Arr.length; l++) {
-							System.out.println(date_Arr[l]);
 							if (!date_Arr[l].isEmpty()) {
 								date_3.addItem(date_Arr[l]);
 							}
@@ -639,15 +689,15 @@ public class Main_User implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		date_3.removeAllItems();
-		String month_r = Integer.toString(month);
+		String month_r = Integer.toString(month+1);
 		String day_r = e.getActionCommand().toString();
 		if (month_r.length() != 2) {
-			month_r = "0" + month_r + 1;
+			month_r = "0" + month_r ;
 		}
 		if (day_r.length() != 2) {
 			day_r = "0" + day_r;
 		}
-		date_2.setText(year + "년 " + month + "월 " + e.getActionCommand().toString() + "일");
+		date_2.setText(year + "년 " + month_r + "월 " + day_r + "일");
 		String[] date_Arr = new String[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
 				"13:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30" };
 		if (doctor.getSelectedItem().toString().equals("먼저 병원을 입력해 주세요") && !date_2.getText().isEmpty()) {
@@ -671,11 +721,16 @@ public class Main_User implements ActionListener {
 					date_3.addItem(date_Arr[l]);
 				}
 			}
+			int cnt = 0;
 			for (int l = 0; l < date_Arr.length; l++) {
 				if (date_Arr[l].isEmpty()) {
-					date_3.addItem("예약 가능한 시간이 없습니다");
+					cnt++;
+					if (cnt == 17) {
+						date_3.addItem("예약 가능한 시간이 없습니다");
+					}
 				}
 			}
+			cnt = 0;
 
 		}
 

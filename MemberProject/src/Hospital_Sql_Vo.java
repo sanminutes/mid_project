@@ -9,6 +9,7 @@ public class Hospital_Sql_Vo {
 	private String medical;
 	private String u_number;
 	private String d_number;
+	private String h_number;
 
 	public Hospital_Sql_Vo() {
 	}
@@ -17,13 +18,30 @@ public class Hospital_Sql_Vo {
 		this.id = u_id;
 	}
 
-	public Hospital_Sql_Vo(int date, String u_id) { //int타입 string타입, 변수명 무시
+	public Hospital_Sql_Vo(int date, String u_id) { // int타입 string타입, 변수명 무시
 		this.date = date;
 		this.id = u_id;
 	}
-	
+
 	public Hospital_Sql_Vo(String name, String address, String contact) {
 		this.name = name;
+		this.address = address;
+		this.contact = contact;
+	}
+
+	public Hospital_Sql_Vo(String u_number, String name, int date, String address, String contact) {
+		this.u_number = u_number;
+		this.name = name;
+		this.date = date;
+		this.address = address;
+		this.contact = contact;
+	}
+
+	public Hospital_Sql_Vo(String u_number, String medical, String name, int date, String address, String contact) {
+		this.u_number = u_number;
+		this.medical = medical;
+		this.name = name;
+		this.date = date;
 		this.address = address;
 		this.contact = contact;
 	}
@@ -41,13 +59,14 @@ public class Hospital_Sql_Vo {
 		this.d_number = d_number;
 	}
 
-	public Hospital_Sql_Vo(String name, int date, String address, String contact, String id, String pwd,
-			String hospital, String medical, String u_number, String d_number) {
+	public Hospital_Sql_Vo(String name, int date, String address, String contact, String h_number, String id,
+			String pwd, String hospital, String medical, String u_number, String d_number) {
 
 		this.name = name;
 		this.date = date;
 		this.address = address;
 		this.contact = contact;
+		this.h_number = h_number;
 		this.hospital = hospital;
 		this.medical = medical;
 		this.id = id;
@@ -134,6 +153,14 @@ public class Hospital_Sql_Vo {
 
 	public void setD_number(String d_number) {
 		this.d_number = d_number;
+	}
+
+	public String getH_number() {
+		return h_number;
+	}
+
+	public void setH_number(String h_number) {
+		this.h_number = h_number;
 	}
 
 }
