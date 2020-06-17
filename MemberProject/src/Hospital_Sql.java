@@ -251,8 +251,14 @@ public class Hospital_Sql {
 			while (rs.next()) {
 				max = rs.getInt(1);
 			}
+			String doctor_f = "SELECT d_hospital FROM doctor_information WHERE d_number = " + doctor_n;
+			rs = stmt.executeQuery(doctor_f);
+			int d_n = 0;
+			while (rs.next()) {
+				d_n = rs.getInt(1);
+			}
 			String schedule = "insert into schedule_info values(" + (max + 1) + "," + u_number + "," + doctor_n + ","
-					+ date_2_i + ",'" + date_3 + "')";
+					+ date_2_i + ",'" + date_3 + "'," + d_n + ")";
 			rs = stmt.executeQuery(schedule);
 			insert_result = true;
 
@@ -287,55 +293,86 @@ public class Hospital_Sql {
 	}
 
 	// 의사아이디로 로그인했을 때, 클릭한 날에 예약한 환자들 정보 조회하기 위한 쿼리
-	public ArrayList<Hospital_Sql_Vo> user_schedule(String d_number, String date_2) {
+	public ArrayList<Hospital_Sql_Vo> user_schedule(String d_number, String date_2, int sel) {
 		ArrayList<Hospital_Sql_Vo> user_schedule = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
-
-//			if (sel == 1) {
-
-//				String s_find = "SELECT d.D_MEDICAL, s.S_DATE_3 , u.U_NAME , u.U_DATE , u.U_ADDRESS ,u.U_CONTACT \r\n"
-//						+ "FROM user_information u" + "INNER JOIN schedule_info s" + "ON u.U_NUMBER = s.U_NUMBER "
-//						+ "INNER JOIN DOCTOR_INFORMATION d" + "ON d.D_NUMBER = s.D_NUMBER " + "WHERE d.D_HOSPITAL ="
-//						+ "" + "AND s.S_DATE_2 =" + date_2 + "ORDER BY D_MEDICAL, s_date_3";
-//				rs = stmt.executeQuery(s_find);
-//				while (rs.next()) {
-//					String medical = rs.getString(1); // 진료과목
-//					String u_number = rs.getString(2); // 예약시간
-//					String u_name = rs.getString(3); // 이름
-//					int u_date = rs.getInt(4); // 생년월일
-//					String u_address = rs.getString(5); // 주소
-//					String u_contact = rs.getString(6); // 연락처
-//					Hospital_Sql_Vo user_schedule_info = new Hospital_Sql_Vo(medical, u_number, u_name, u_date,
-//							u_address, u_contact);
-//					System.out.println(medical);
-//					user_schedule.add(user_schedule_info);
-//				}
-//			}
-//			if (sel == 2) {
-//
-//			}
-//			if (sel == 3) {
-				String s_find = "SELECT s.S_DATE_3, u.U_NAME , u.U_DATE , u.U_ADDRESS ,u.U_CONTACT FROM user_information u INNER JOIN schedule_info s"
-						+ " ON u.U_NUMBER = s.U_NUMBER WHERE s.D_NUMBER =" + d_number + " AND s.S_DATE_2 =" + date_2;
+			if (sel == 1) {
+				String s_find = "SELECT d.D_MEDICAL, d.D_name, s.S_DATE_3 , u.U_NAME , u.U_DATE , u.U_ADDRESS ,u.U_CONTACT "
+						+ "FROM user_information u " + "INNER JOIN schedule_info s " + "ON u.U_NUMBER = s.U_NUMBER "
+						+ "INNER JOIN DOCTOR_INFORMATION d " + "ON d.D_NUMBER = s.D_NUMBER " + "WHERE d.D_hospital ="
+						+ d_number + " AND s.S_DATE_2 =" + date_2 + " ORDER BY D_MEDICAL, s_date_3";
 				rs = stmt.executeQuery(s_find);
-				while (rs.next()) {
-					String u_number = rs.getString(1);
-					String u_name = rs.getString(2);
-					int u_date = rs.getInt(3);
-					String u_address = rs.getString(4);
-					String u_contact = rs.getString(5);
-					Hospital_Sql_Vo user_schedule_info = new Hospital_Sql_Vo(u_number, u_name, u_date, u_address,
-							u_contact);
-					user_schedule.add(user_schedule_info);
-//				}
+			} else if (sel == 2) {
+				String s_find = "SELECT d.D_MEDICAL, d.D_name, s.S_DATE_3 , u.U_NAME , u.U_DATE , u.U_ADDRESS ,u.U_CONTACT "
+						+ "FROM user_information u " + "INNER JOIN schedule_info s " + "ON u.U_NUMBER = s.U_NUMBER "
+						+ "INNER JOIN DOCTOR_INFORMATION d " + "ON d.D_NUMBER = s.D_NUMBER " + "WHERE d.D_number ="
+						+ d_number + " AND s.S_DATE_2 =" + date_2 + " ORDER BY D_MEDICAL, s_date_3";
+				rs = stmt.executeQuery(s_find);
 			}
 
-		} catch (Exception e) {
+			while (rs.next()) {
+				String medical = rs.getString(1); // 진료과목
+				String d_name = rs.getString(2);
+				String u_number = rs.getString(3); // 예약시간
+				String u_name = rs.getString(4); // 이름
+				int u_date = rs.getInt(5); // 생년월일
+				String u_address = rs.getString(6); // 주소
+				String u_contact = rs.getString(7); // 연락처
+				Hospital_Sql_Vo user_schedule_info = new Hospital_Sql_Vo(medical, d_name, u_number, u_name, u_date,
+						u_address, u_contact);
+				user_schedule.add(user_schedule_info);
+
+			}
+
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 		}
 
 		return user_schedule;
+	}
+
+	// 환자의 이전 방문 내역을 조회하기 위한 쿼리
+	public ArrayList<Hospital_Sql_Vo> schedule_check(String date_f, String date_d, String d_hospital,
+			String daily_date) {
+		ArrayList<Hospital_Sql_Vo> schedule_check = new ArrayList<Hospital_Sql_Vo>();
+		try {
+			connDB();
+			String s_find_a = "SELECT U_NUMBER " + "FROM schedule_info " + "WHERE h_number=" + d_hospital
+					+ " and S_DATE_2 ='" + date_d + "' AND s_date_3 = '" + date_f + "'";
+			rs = stmt.executeQuery(s_find_a);
+			int u_number = 0;
+			while (rs.next()) {
+				u_number = rs.getInt(1); // 진료과목
+			}
+			
+			String s_find_b = "SELECT u.U_NAME, u.U_DATE, s.s_DATE_2, s.S_DATE_3, d.D_MEDICAL, d.D_NAME "
+					+ "FROM SCHEDULE_INFO s" + " INNER JOIN DOCTOR_INFORMATION d" + " ON s.D_NUMBER = d.D_NUMBER"
+					+ " INNER JOIN USER_INFORMATION u" + " ON s.U_NUMBER = u.U_NUMBER " + "WHERE d.D_HOSPITAL ="
+					+ d_hospital + " AND s.U_NUMBER =" + u_number + " AND s_date_2 <" + daily_date
+					+ " ORDER BY s_date_2 ASC, s_date_3";
+			rs = stmt.executeQuery(s_find_b);
+			while (rs.next()) {
+				String u_name = rs.getString(1); // 이름
+				int u_date = rs.getInt(2); // 생년월일
+				String s_date_2 = rs.getString(3); //예약날짜
+				String s_date_3 = rs.getString(4); // 예약시간
+				String medical = rs.getString(5); // 진료과목
+				String d_name = rs.getString(6); // 담당의
+				Hospital_Sql_Vo user_schedule_check = new Hospital_Sql_Vo(u_name, u_date, s_date_2, s_date_3,
+						medical, d_name);
+				schedule_check.add(user_schedule_check);
+			}
+
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+
+		return schedule_check;
 	}
 
 	public void connDB() {

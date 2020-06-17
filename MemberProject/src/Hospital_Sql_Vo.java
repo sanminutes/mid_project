@@ -10,6 +10,7 @@ public class Hospital_Sql_Vo {
 	private String u_number;
 	private String d_number;
 	private String h_number;
+	private String d_name;
 
 	public Hospital_Sql_Vo() {
 	}
@@ -29,6 +30,17 @@ public class Hospital_Sql_Vo {
 		this.contact = contact;
 	}
 
+//u_name, u_date, s_date_2, s_date_3, medical, d_name
+	public Hospital_Sql_Vo(String name, int date, String h_number, String d_number, String medical,
+			String d_name) {
+		this.name = name;
+		this.date = date;
+		this.d_number = d_number;
+		this.h_number = h_number;
+		this.medical = medical;
+		this.d_name = d_name;
+	}
+
 	public Hospital_Sql_Vo(String u_number, String name, int date, String address, String contact) {
 		this.u_number = u_number;
 		this.name = name;
@@ -37,9 +49,11 @@ public class Hospital_Sql_Vo {
 		this.contact = contact;
 	}
 
-	public Hospital_Sql_Vo(String u_number, String medical, String name, int date, String address, String contact) {
-		this.u_number = u_number;
+	public Hospital_Sql_Vo(String medical, String d_name, String u_number, String name, int date, String address,
+			String contact) {
 		this.medical = medical;
+		this.d_name = d_name;
+		this.u_number = u_number;
 		this.name = name;
 		this.date = date;
 		this.address = address;
@@ -161,6 +175,14 @@ public class Hospital_Sql_Vo {
 
 	public void setH_number(String h_number) {
 		this.h_number = h_number;
+	}
+
+	public String getD_name() {
+		return d_name;
+	}
+
+	public void setD_name(String d_name) {
+		this.d_name = d_name;
 	}
 
 }

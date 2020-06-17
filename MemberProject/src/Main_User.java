@@ -26,6 +26,7 @@ public class Main_User implements ActionListener {
 	Font btn_nomal;
 	JLabel L_YearMonth;
 	String result_h, result_i, result_name, result_address, h_medical;
+	String[] date_Arr;
 	JTextField hospital, date_2;
 	JComboBox<String> doctor, medical, date_3;
 	int year, month;
@@ -71,6 +72,51 @@ public class Main_User implements ActionListener {
 		JLabel y_doctor = new JLabel("담당 의사 :");
 		JLabel y_date3 = new JLabel("예약 날짜 :");
 		JButton btn_logout = new JButton("[접속종료]");
+		btn_logout.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JDialog exit = new JDialog(fmain_user, "종료 안내", true);
+				exit.setBounds(20, 40, 220, 150);
+				exit.setLayout(null);
+				JLabel msg_1 = new JLabel("종료 하시겠습니까?");
+				msg_1.setBounds(50, 20, 140, 25);
+				msg_1.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+				JButton yes = new JButton("예");
+				yes.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						System.exit(0);
+					}
+
+				});
+				yes.setBounds(20, 60, 60, 25);
+				yes.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+				yes.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+				JButton no = new JButton("아니요");
+				no.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						exit.dispose();
+					}
+
+				});
+				no.setBounds(100, 60, 80, 25);
+				no.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+				no.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+				exit.add(msg_1);
+				exit.add(yes);
+				exit.add(no);
+				exit.setVisible(true);
+
+			}
+
+		});
 		JButton btn_send = new JButton("예　　 약");
 		JButton btn_cancel = new JButton("취　　 소");
 		btn_cancel.addActionListener(new ActionListener() {
@@ -194,7 +240,7 @@ public class Main_User implements ActionListener {
 						send_yes.setBounds(60, 60, 60, 25);
 						send_ok.setVisible(true);
 					}
-				}else if (date_2.getText().isEmpty()) {
+				} else if (date_2.getText().isEmpty()) {
 					JDialog msg = new JDialog(fmain_user, "예약 안내", true);
 					JLabel msg_1 = new JLabel("예약 정보 입력란에 미입력 부분이 있습니다");
 					JLabel msg_2 = new JLabel("빠짐없이 입력해주셔야 예약이 가능합니다");
@@ -261,7 +307,7 @@ public class Main_User implements ActionListener {
 		});
 		medical.addItemListener(new ItemListener() {
 
-	@Override
+			@Override
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
 				doctor.removeAllItems();
@@ -272,6 +318,7 @@ public class Main_User implements ActionListener {
 					d_number = doctor_info.getU_date();
 					String doctor_name = doctor_info.getU_id();
 					doctor.addItem(doctor_name);
+					date_3.removeAllItems();
 				}
 				if (doctor_list.size() == 0) {
 					doctor.addItem("예약 가능한 의사가 없습니다");
@@ -534,55 +581,58 @@ public class Main_User implements ActionListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				result_name = (String) table.getValueAt(row, 0);
-				result_address = (String) table.getValueAt(row, 1);
-				ArrayList<Hospital_Sql_Vo> medical_list = HS.medical_list(result_name, result_address);
-				String[] strArr = new String[medical_list.size()];
-				if (select_n == 1) {
-					Hospital_sign.T_medical.removeAllItems();
-				} else if (select_n == 2) {
-					medical.removeAllItems();
-					date_3.removeAllItems();
-				}
-				for (int i = 0; i < medical_list.size(); i++) {
-					Hospital_Sql_Vo medical_info = (Hospital_Sql_Vo) medical_list.get(i);
-					h_medical = medical_info.getU_id();
-					strArr[i] = h_medical;
-					if (select_n == 1) { // 회원가입시
-						find_hsp.dispose();
-						Hospital_sign.T_hospital.setText(result_name);
-						Hospital_sign.T_medical.addItem(strArr[i]);
-					} else if (select_n == 2) { // 예약시
-						find_hsp.dispose();
-						hospital.setText(result_name);
-						medical.addItem(strArr[i]);
-						medical.setEnabled(true);
-						doctor.setEnabled(true);
-						date_3.setEnabled(true);
-
+				if (e.getClickCount() == 2) {
+					int row = table.getSelectedRow();
+					result_name = (String) table.getValueAt(row, 0);
+					result_address = (String) table.getValueAt(row, 1);
+					ArrayList<Hospital_Sql_Vo> medical_list = HS.medical_list(result_name, result_address);
+					String[] strArr = new String[medical_list.size()];
+					if (select_n == 1) {
+						Hospital_sign.T_medical.removeAllItems();
+					} else if (select_n == 2) {
+						medical.removeAllItems();
+						date_3.removeAllItems();
 					}
-				}
-				if (select_n == 1) {
+					for (int i = 0; i < medical_list.size(); i++) {
+						Hospital_Sql_Vo medical_info = (Hospital_Sql_Vo) medical_list.get(i);
+						h_medical = medical_info.getU_id();
+						strArr[i] = h_medical;
+						if (select_n == 1) { // 회원가입시
+							find_hsp.dispose();
+							Hospital_sign.T_hospital.setText(result_name);
+							Hospital_sign.T_medical.addItem(strArr[i]);
+						} else if (select_n == 2) { // 예약시
+							find_hsp.dispose();
+							hospital.setText(result_name);
+							medical.addItem(strArr[i]);
+							medical.setEnabled(true);
+							doctor.setEnabled(true);
+							date_3.setEnabled(true);
 
-				} else if (select_n == 2) {
-					String[] date_Arr = new String[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
-							"12:30", "13:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30" };
-					if (!date_2.getText().isEmpty()) {
-						ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), d_number);
+						}
+					}
+					if (select_n == 1) {
 
-						for (int k = 0; k < schedule_find.size(); k++) {//
-							Hospital_Sql_Vo schedule_info = (Hospital_Sql_Vo) schedule_find.get(k);
-							String s_date_3 = schedule_info.getU_id();
-							for (int j = 0; j < date_Arr.length; j++) {
-								if (date_Arr[j].equals(s_date_3)) {
-									date_Arr[j] = "";
+					} else if (select_n == 2) {
+						date_Arr = new String[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+								"12:30", "13:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
+								"17:30" };
+						if (!date_2.getText().isEmpty()) {
+							ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), d_number);
+
+							for (int k = 0; k < schedule_find.size(); k++) {//
+								Hospital_Sql_Vo schedule_info = (Hospital_Sql_Vo) schedule_find.get(k);
+								String s_date_3 = schedule_info.getU_id();
+								for (int j = 0; j < date_Arr.length; j++) {
+									if (date_Arr[j].equals(s_date_3)) {
+										date_Arr[j] = "";
+									}
 								}
 							}
-						}
-						for (int l = 0; l < date_Arr.length; l++) {
-							if (!date_Arr[l].isEmpty()) {
-								date_3.addItem(date_Arr[l]);
+							for (int l = 0; l < date_Arr.length; l++) {
+								if (!date_Arr[l].isEmpty()) {
+									date_3.addItem(date_Arr[l]);
+								}
 							}
 						}
 					}
@@ -689,10 +739,10 @@ public class Main_User implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		date_3.removeAllItems();
-		String month_r = Integer.toString(month+1);
+		String month_r = Integer.toString(month + 1);
 		String day_r = e.getActionCommand().toString();
 		if (month_r.length() != 2) {
-			month_r = "0" + month_r ;
+			month_r = "0" + month_r;
 		}
 		if (day_r.length() != 2) {
 			day_r = "0" + day_r;
