@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +37,8 @@ public class Hospital_loginform {
 		JTextField f_t_message = new JTextField(46);
 		JTextField f_t_id = new JTextField(20);
 		JTextField f_t_pwd = new JTextField(20);
+		JLabel img = new JLabel();
+
 		btn_nomal = new Font("나눔바른고딕", Font.PLAIN, 12);
 		// ---------------------------------------------------------------------------
 		f_login.add(f_l_id);
@@ -45,6 +49,7 @@ public class Hospital_loginform {
 		f_login.add(f_t_message);
 		f_login.add(f_t_id);
 		f_login.add(f_t_pwd);
+		f_login.add(img);
 		// ---------------------------------------------------------------------------
 		f_l_id.setBounds(42, 300, 45, 25);
 		f_l_pwd.setBounds(30, 335, 60, 25);
@@ -54,6 +59,8 @@ public class Hospital_loginform {
 		f_t_message.setBounds(18, 420, 300, 25);// x, y, w,h
 		f_t_id.setBounds(90, 300, 140, 25);
 		f_t_pwd.setBounds(90, 335, 140, 25);
+		img.setBounds(40, 80, 300, 200);
+		img.setIcon(new ImageIcon("img/QPJ2SO6E.jpg"));
 		// ---------------------------------------------------------------------------
 		f_b_signup.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		f_b_find.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
@@ -85,13 +92,17 @@ public class Hospital_loginform {
 						f_t_message.setText("  해당 아이디는 존재하지 않습니다.");
 					} else {
 						Hospital_Sql_Vo data = (Hospital_Sql_Vo) list.get(0);
-						if (data.getU_pwd().equals(f_t_pwd.getText())) {
-							f_login.dispose();
-							if (data.getD_number() == null && data.getU_number() != null) { // 환자
+						if (data.getE().equals(f_t_pwd.getText())) {
+							if (data.getG() == null && data.getF() != null) { // 환자
+								f_login.dispose();
 								SP.main_hospital_user(data);
-							} else if (data.getD_number() != null && data.getU_number() == null) { // 의사
-								MD.main_hospital_doctor(data);
-
+							} else if (data.getG() != null && data.getF() == null) { // 의사
+								if (data.getZ() == 2) {
+									f_login.dispose();
+									MD.main_hospital_doctor(data);
+								} else {
+								f_t_message.setText("현재 로그인 불가, 해당 병원 전산팀에 문의바람(신규)");
+								}
 							}
 
 						} else {

@@ -15,7 +15,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +28,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class Main_Doctor implements ActionListener {
 	JLabel L_YearMonth, daily;
@@ -33,21 +36,23 @@ public class Main_Doctor implements ActionListener {
 	DefaultTableModel model, model2, model3;
 	JTable table;
 	JScrollPane Scroll, Scroll_d;
-	String d_number, date_2, d_hospital, daily_date, u_name;
-	int year, month, u_date;
+	String d_number, date_2, d_hospital, daily_date, u_name, u_date;
+	int year, month;
 	JFrame fmain_doctor;
 	CheckboxGroup group1;
 	Hospital_Sql HS = new Hospital_Sql();
+	JComboBox<String> comboBox;
+	JPanel p_left;
 
 	public void main_hospital_doctor(Hospital_Sql_Vo data) {
-		fmain_doctor = new JFrame(data.getD_hospital() + " [" + data.getD_medical() + "]");
+		fmain_doctor = new JFrame(data.getI() + " [" + data.getJ() + "]");
 		fmain_doctor.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		fmain_doctor.setResizable(false);
 		fmain_doctor.setSize(1000, 700);
 		fmain_doctor.setLayout(null);
 		fmain_doctor.setVisible(true);
 		fmain_doctor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		JLabel m_doctor = new JLabel("" + data.getU_name() + "님, 반갑습니다.");
+		JLabel m_doctor = new JLabel("" + data.getA() + "님, 반갑습니다.");
 		m_doctor.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 		m_doctor.setBounds(740, 30, 240, 25);
 		JButton btn_logout = new JButton("[접속종료]");
@@ -105,7 +110,7 @@ public class Main_Doctor implements ActionListener {
 		JPanel left = new JPanel();
 		left.setBounds(30, 80, 448, 360);
 		left.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
-		JPanel p_left = new JPanel();
+		p_left = new JPanel();
 		p_right.setLayout(null);
 		JPanel right_north = new JPanel();
 		right_north.setLayout(null);
@@ -220,7 +225,7 @@ public class Main_Doctor implements ActionListener {
 		d_result.setBounds(400, 10, 50, 25);
 		left.add(m_result);
 		left.add(d_result);
-		
+
 		long systemTime = System.currentTimeMillis(); // 현재 시스템 시간 구하기
 		SimpleDateFormat d_time = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
 		daily_date = d_time.format(systemTime);
@@ -233,7 +238,7 @@ public class Main_Doctor implements ActionListener {
 		left.add(daily);
 		JLabel find_schedule = new JLabel("[이전 진료 내역]");
 		fmain_doctor.add(find_schedule);
-		find_schedule.setFont(new Font("나눔바른고딕",Font.PLAIN,20));
+		find_schedule.setFont(new Font("나눔바른고딕", Font.PLAIN, 20));
 		find_schedule.setBounds(30, 460, 500, 25);
 		// ---------------------------------[달력 설정]
 		Calendar date = Calendar.getInstance();
@@ -270,13 +275,18 @@ public class Main_Doctor implements ActionListener {
 
 		// --------------------------------------------------------------------[J테이블 생성을
 		// 위한 코드]
-		String userColumn[] = { "번호", "예약시간", "이름", "생년월일", "주소", "연락처" };
-		String column[] = { "번호", "진료과목", "예약시간", "이름", "생년월일", "주소", "연락처", "담당의" };
+		String userColumn[] = { "번호", "구분", "예약시간", "이름", "주민번호", "증상", "연락처" };
+		String column[] = { "번호", "구분", "진료과목", "예약시간", "이름", "주민번호", "증상", "연락처", "담당의" };
 		String doctorColumn[] = { "번호", "구분", "방문일자", "진료부서", "담당의", "증상", "요청사항" };
+
 		model = new DefaultTableModel(userColumn, 0) {
 			public boolean isCellEditable(int i, int c) {
-				return false;
+				if (c == 0 || c >= 2 && c <= 6) {
+					return false;
+				}
+				return true;
 			}
+
 		};
 		model2 = new DefaultTableModel(column, 0) {
 			public boolean isCellEditable(int i, int c) {
@@ -291,7 +301,6 @@ public class Main_Doctor implements ActionListener {
 		table = new JTable(model);
 		JTable table_d = new JTable(model3);
 		table.addMouseListener(new MouseListener() {
-
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub4
@@ -301,27 +310,30 @@ public class Main_Doctor implements ActionListener {
 					model_d.setNumRows(0);
 					int row = table.getSelectedRow();
 					if (group1.getSelectedCheckbox().toString().contains("전체")) {
-
+						System.out.println("여기");
 						date_d = daily.getText().replaceAll("[^0-9]", ""); // J테이블에 출력된 정보의 기준이 되는 날짜 저장
 						date_f = String.valueOf(table.getValueAt(row, 2)); // J테이블 내 예약시간 저장
-
 					} else {
+						System.out.println("저기");
 						date_d = daily.getText().replaceAll("[^0-9]", ""); // J테이블에 출력된 정보의 기준이 되는 날짜 저장
 						date_f = String.valueOf(table.getValueAt(row, 1)); // J테이블 내 예약시간 저장
 					}
-				} //
-				ArrayList<Hospital_Sql_Vo> schedule_check = HS.schedule_check(date_f, date_d, d_hospital, daily_date);
+				}
+				ArrayList<Hospital_Sql_Vo> schedule_check = HS.schedule_check(date_f, date_d, data.getH(), daily_date);
 				int cnt = 1;
 				for (int i = 0; i < schedule_check.size(); i++) {
 					Hospital_Sql_Vo user_schedule_check = (Hospital_Sql_Vo) schedule_check.get(i);
-					u_name = user_schedule_check.getU_name(); // 이름
-					u_date = user_schedule_check.getU_date(); // 생년월일
-					String s_date_2 = user_schedule_check.getH_number(); // 예약날짜
-					String s_date_3 = user_schedule_check.getD_number(); // 예약시간
-					String medical_f = user_schedule_check.getD_medical(); // 진료과목
-					String d_name = user_schedule_check.getD_name(); // 담당의
-					model3.addRow(new Object[] { cnt++, "", s_date_2 + " " + s_date_3, medical_f, d_name, "", "" });
-					find_schedule.setText("["+u_name+"("+u_date+")"+"님의 이전 진료 내역"+"]");
+					u_name = user_schedule_check.getA(); // 이름
+					u_date = user_schedule_check.getB(); // 생년월일
+					String s_date_2 = user_schedule_check.getC(); // 예약날짜
+					String s_date_3 = user_schedule_check.getD(); // 예약시간
+					String medical_f = user_schedule_check.getE(); // 진료과목
+					String d_name = user_schedule_check.getF(); // 담당의
+					String disease = user_schedule_check.getG(); // 증상
+					String etc = user_schedule_check.getH(); // 증상
+					model3.addRow(
+							new Object[] { cnt++, etc, s_date_2 + " " + s_date_3, medical_f, d_name, disease, "" });
+					find_schedule.setText("[" + u_name + "(" + u_date + ")" + "님의 이전 진료 내역" + "]");
 				}
 			}
 
@@ -350,7 +362,7 @@ public class Main_Doctor implements ActionListener {
 			}
 
 		});
-		daily_result(data.getD_number(), daily_date);
+		daily_result(data.getG(), daily_date); // 현재시간
 
 		Scroll = new JScrollPane(table);
 		Scroll_d = new JScrollPane(table_d);
@@ -385,16 +397,14 @@ public class Main_Doctor implements ActionListener {
 			btn_Arr[i].addActionListener(this);
 		}
 		// -----------------------------------------------------------------------------------
-		d_number = data.getD_number();
-		d_hospital = data.getH_number();
+		d_number = data.getG();
+//		d_hospital = data.getH();
 		m_result.addItemListener(new ItemListener() {
-
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				// TODO Auto-generated method stub
 				String daily_r = daily.getText().replaceAll("[^0-9]", "");
-				daily_result(d_hospital, daily_r);
-
+				daily_result(d_number, daily_r); // 오늘 날짜
 			}
 
 		});
@@ -460,9 +470,6 @@ public class Main_Doctor implements ActionListener {
 		}
 		date_2 = Integer.toString(year) + month_r + day_r;
 		daily.setText("[" + date_2 + "일자 예약현황" + "]");
-		// ------------------------------- Jtable에 생성된 정보 초기화 하기 위한 코드
-
-		// ---------------------------------------------------------------
 		daily_result(d_number, date_2);
 
 	}
@@ -472,42 +479,43 @@ public class Main_Doctor implements ActionListener {
 		if (group1.getSelectedCheckbox().toString().contains("전체")) {
 			table.setModel(model2);
 			table.getColumnModel().getColumn(0).setPreferredWidth(50); // J테이블 내 속성들간의 간격 조절
-			table.getColumnModel().getColumn(1).setPreferredWidth(200);
-			table.getColumnModel().getColumn(2).setPreferredWidth(60);
-			table.getColumnModel().getColumn(3).setPreferredWidth(70);
-			table.getColumnModel().getColumn(4).setPreferredWidth(80);
-			table.getColumnModel().getColumn(5).setPreferredWidth(300);
-			table.getColumnModel().getColumn(6).setPreferredWidth(100);
+			table.getColumnModel().getColumn(2).setPreferredWidth(80);
+			table.getColumnModel().getColumn(3).setPreferredWidth(200);
+			table.getColumnModel().getColumn(4).setPreferredWidth(60);
+			table.getColumnModel().getColumn(5).setPreferredWidth(70);
+			table.getColumnModel().getColumn(6).setPreferredWidth(120);
+			table.getColumnModel().getColumn(7).setPreferredWidth(300);
+			table.getColumnModel().getColumn(8).setPreferredWidth(100);
 			DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 			dtcr.setHorizontalAlignment(SwingConstants.CENTER);
 			table.getColumn("번호").setCellRenderer(dtcr);
+			table.getColumn("구분").setCellRenderer(dtcr);
 			table.getColumn("진료과목").setCellRenderer(dtcr);
 			table.getColumn("예약시간").setCellRenderer(dtcr);
 			table.getColumn("이름").setCellRenderer(dtcr);
-			table.getColumn("생년월일").setCellRenderer(dtcr);
+			table.getColumn("주민번호").setCellRenderer(dtcr);
 			table.getColumn("연락처").setCellRenderer(dtcr);
 			table.getColumn("담당의").setCellRenderer(dtcr);
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			model.setNumRows(0);
 			sel = 1;
-			doctor_n = d_hospital;
-			;
 		} else if (group1.getSelectedCheckbox().toString().contains("담당")) {
-
 			table.setModel(model);
 			table.getColumnModel().getColumn(0).setPreferredWidth(50); // J테이블 내 속성들간의 간격 조절
 			table.getColumnModel().getColumn(1).setPreferredWidth(60);
-			table.getColumnModel().getColumn(2).setPreferredWidth(80);
-			table.getColumnModel().getColumn(3).setPreferredWidth(70);
-			table.getColumnModel().getColumn(4).setPreferredWidth(300);
-			table.getColumnModel().getColumn(5).setPreferredWidth(100);
+			table.getColumnModel().getColumn(2).setPreferredWidth(60);
+			table.getColumnModel().getColumn(3).setPreferredWidth(80);
+			table.getColumnModel().getColumn(4).setPreferredWidth(120);
+			table.getColumnModel().getColumn(5).setPreferredWidth(300);
+			table.getColumnModel().getColumn(6).setPreferredWidth(100);
 
 			DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 			dtcr.setHorizontalAlignment(SwingConstants.CENTER);
 			table.getColumn("번호").setCellRenderer(dtcr);
+			table.getColumn("구분").setCellRenderer(dtcr);
 			table.getColumn("예약시간").setCellRenderer(dtcr);
 			table.getColumn("이름").setCellRenderer(dtcr);
-			table.getColumn("생년월일").setCellRenderer(dtcr);
+			table.getColumn("주민번호").setCellRenderer(dtcr);
 			table.getColumn("연락처").setCellRenderer(dtcr);
 			DefaultTableModel model2 = (DefaultTableModel) table.getModel();
 			model2.setNumRows(0);
@@ -517,16 +525,78 @@ public class Main_Doctor implements ActionListener {
 		int cnt = 1, nnt = 1;
 		for (int i = 0; i < user_schedule.size(); i++) {
 			Hospital_Sql_Vo user_schedule_info = (Hospital_Sql_Vo) user_schedule.get(i);
-			String medical = user_schedule_info.getD_medical();
-			String d_name = user_schedule_info.getD_name();
-			String date = user_schedule_info.getU_number();
-			String name = user_schedule_info.getU_name();
-			int date_a = user_schedule_info.getU_date();
-			String address = user_schedule_info.getU_address();
-			String contact = user_schedule_info.getU_contact();
+			String date = user_schedule_info.getA(); // 예약시간
+			String name = user_schedule_info.getB(); // 이름
+			String date_a = user_schedule_info.getC(); // 생년월일
+			String disease = user_schedule_info.getD(); // 증상
+			String contact = user_schedule_info.getE(); // 연락처
+			String etc = user_schedule_info.getF();
+			String d_name = user_schedule_info.getG(); // 담당의
+			String medical = user_schedule_info.getH(); // 진료과목
+			System.out.println();
+			model.addRow(new Object[] { cnt++, etc, date, name, date_a, disease, contact });
+			model2.addRow(new Object[] { nnt++, etc, medical, date, name, date_a, disease, contact, d_name });
+			// --------------------------JTabel안에 콤보박스 삽입
 
-			model.addRow(new Object[] { cnt++, date, name, date_a, address, contact });
-			model2.addRow(new Object[] { nnt++, medical, date, name, date_a, address, contact, d_name });
+			// 일단 콤보박스부터 만들기
+			comboBox = new JComboBox<String>();
+			comboBox.addItem("진료대기");
+			comboBox.addItem("진료완료");
+			comboBox.addItem("예약취소");
+			comboBox.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+			// 테이블에서 하나의 column(열, 칸) 관리자 얻어오기
+			TableColumn columnA = table.getColumnModel().getColumn(1);
+			columnA.setCellEditor(new DefaultCellEditor(comboBox));
+			comboBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					if (comboBox.getSelectedItem().toString().equals("진료완료")) {
+						JDialog msg = new JDialog(fmain_doctor, "확인", true);
+						msg.setBounds(20, 40, 300, 150);
+						msg.setLayout(null);
+						JLabel msg_1 = new JLabel("["+comboBox.getSelectedItem().toString()+"]로 변경하시겠습니까?");
+						msg_1.setBounds(50, 20, 300, 25);
+						msg_1.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						JButton yes = new JButton("예");
+						yes.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								// TODO Auto-generated method stub
+								System.exit(0);
+							}
+
+						});
+						yes.setBounds(60, 60, 60, 25);
+						yes.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						yes.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+						JButton no = new JButton("아니요");
+						no.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								// TODO Auto-generated method stub
+								msg.dispose();
+							}
+
+						});
+						no.setBounds(140, 60, 80, 25);
+						no.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+						no.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
+						msg.add(msg_1);
+						msg.add(yes);
+						msg.add(no);
+						msg.setVisible(true);
+						
+					} else if (comboBox.getSelectedItem().toString().contentEquals("예약취소")) {
+						System.out.println("뭐냐");
+					}
+				}
+
+			});
+			// -------------------------------------------------
+
 		}
 		cnt = 0;
 		nnt = 0;

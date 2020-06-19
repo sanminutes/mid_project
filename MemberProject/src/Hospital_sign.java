@@ -23,6 +23,7 @@ public class Hospital_sign {
 	JTextField T_id;
 	JDialog Popup;
 	JButton btn_hospital;
+	String date_all, contact_all;
 
 	static JTextField T_hospital;
 	static JComboBox<String> T_medical;
@@ -43,78 +44,97 @@ public class Hospital_sign {
 		Checkbox user = new Checkbox(" 환자", group1, true);
 		JLabel L_id = new JLabel("아이디 : ");
 		JLabel L_pwd = new JLabel("비밀번호 : ");
+		JLabel L_pwd_r = new JLabel("비밀번호 확인 : ");
 		JLabel L_name = new JLabel("이름 : ");
-		JLabel L_date = new JLabel("생년월일 : ");
-		JLabel L_address = new JLabel("주소 : ");
-		JLabel L_contact = new JLabel("연락처 : ");
+		JLabel L_date = new JLabel("주민번호 : ");
+		JLabel L_date_c = new JLabel("─");
+		JLabel L_contact = new JLabel("전화번호 : ");
+		JLabel L_contact_a = new JLabel("─");
+		JLabel L_contact_b = new JLabel("─");
 		// ---------------------------------------------------------------------------
 		L_idx = new JLabel();
 		JLabel L_pwdx = new JLabel();
+		JLabel L_pwd_r_x = new JLabel();
 		JLabel L_namex = new JLabel();
 		JLabel L_datex = new JLabel();
-		JLabel L_contactx = new JLabel("");
+		JLabel L_contactx = new JLabel();
 		// ---------------------------------------------------------------------------
 		T_id = new JTextField();
 		JTextField T_pwd = new JTextField();
+		JTextField T_pwd_r = new JTextField();
 		JTextField T_name = new JTextField();
-		JTextField T_date = new JTextField(" 숫자만 입력가능(ex 20200608)");
-		JTextField T_address = new JTextField();
-		JTextField T_contact = new JTextField();
+		JTextField T_date_a = new JTextField();
+		JTextField T_date_b = new JTextField();
+		JComboBox<String> T_contact_A = new JComboBox<String>();
+		String[] contact_default = new String[] { "010", "02", "031", "032", "041", "042", "043", "044", "051", "052",
+				"053", "054", "055", "061", "062", "063", "064" };
+		for (int i = 0; i < contact_default.length; i++) {
+			T_contact_A.addItem(contact_default[i]);
+		}
+		JTextField T_contact_B = new JTextField();
+		JTextField T_contact_C = new JTextField();
 		// ---------------------------------------------------------------------------
 		JButton btn_create = new JButton("가입");
 		JButton btn_back = new JButton("돌아가기");
 		// --------------------------------------------------[3. 회원가입을 위한 Popup 프레임 작성]
 		btn_nomal = new Font("나눔바른고딕", Font.PLAIN, 12);
-
-		T_date.setForeground(Color.LIGHT_GRAY);
-
 		Popup = new JDialog(f_signup, "병원 진료 예약 시스템", true);
 		Popup.setLayout(null);
 		L_msg = new JLabel();
 		JButton ok = new JButton("확인");
-		
-		
-		
+
 		btn_create.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		btn_back.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		doctor.setFont(btn_nomal);
 		user.setFont(btn_nomal);
 		btn_create.setFont(btn_nomal);
 		btn_back.setFont(btn_nomal);
-
 		Lmessage1.setFont(btn_nomal);
 		L_id.setFont(btn_nomal);
 		L_pwd.setFont(btn_nomal);
+		L_pwd_r.setFont(btn_nomal);
 		L_name.setFont(btn_nomal);
 		L_date.setFont(btn_nomal);
-		L_address.setFont(btn_nomal);
 		L_contact.setFont(btn_nomal);
+		L_contact_a.setFont(btn_nomal);
+		L_contact_b.setFont(btn_nomal);
+		L_msg.setFont(btn_nomal);
+		L_date_c.setFont(btn_nomal);
+		L_contact_a.setFont(btn_nomal);
+		L_contact_b.setFont(btn_nomal);
+		T_contact_A.setFont(btn_nomal);
+		T_contact_B.setFont(btn_nomal);
+		T_contact_C.setFont(btn_nomal);
 		Lmessage1.setBounds(40, 40, 320, 25);
 		doctor.setBounds(120, 80, 60, 25);
 		user.setBounds(240, 80, 60, 25);
 		L_id.setBounds(40, 120, 60, 25);
-		L_id.setBounds(40, 120, 60, 25);
 		L_idx.setBounds(40, 140, 300, 25);
 		L_pwd.setBounds(40, 160, 60, 25);
 		L_pwdx.setBounds(40, 180, 300, 25);
-		L_name.setBounds(40, 200, 60, 25);
-		L_namex.setBounds(40, 220, 300, 25);
-		L_date.setBounds(40, 240, 60, 25);
-		L_datex.setBounds(40, 260, 300, 25);
-		L_address.setBounds(40, 280, 60, 25);
+		L_pwd_r.setBounds(40, 200, 100, 25);
+		L_pwd_r_x.setBounds(40, 220, 300, 25);
+		L_name.setBounds(40, 240, 60, 25);
+		L_namex.setBounds(40, 260, 300, 25);
+		L_date.setBounds(40, 280, 60, 25);
+		L_date_c.setBounds(224, 280, 20, 25);
+		L_datex.setBounds(40, 300, 300, 25);
 		L_contact.setBounds(40, 320, 60, 25);
+		L_contact_a.setBounds(186, 320, 20, 25);
+		L_contact_b.setBounds(270, 320, 20, 25);
 		L_contactx.setBounds(40, 340, 300, 25);
 		T_id.setBounds(120, 120, 230, 25);
 		T_pwd.setBounds(120, 160, 230, 25);
-		T_name.setBounds(120, 200, 230, 25);
-		T_date.setBounds(120, 240, 230, 25);
-		T_address.setBounds(120, 280, 230, 25);
-		T_contact.setBounds(120, 320, 230, 25);
+		T_pwd_r.setBounds(120, 200, 230, 25);
+		T_name.setBounds(120, 240, 230, 25);
+		T_date_a.setBounds(120, 280, 90, 25);
+		T_date_b.setBounds(250, 280, 100, 25);
+		T_contact_A.setBounds(120, 320, 60, 25);
+		T_contact_B.setBounds(205, 320, 60, 25);
+		T_contact_C.setBounds(290, 320, 60, 25);
 		btn_create.setBounds(40, 450, 120, 25);
 		btn_back.setBounds(230, 450, 120, 25);
-
 		L_msg.setBounds(70, 20, 200, 25);
-		L_msg.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 		ok.setBounds(100, 60, 60, 25);
 		ok.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 
@@ -136,22 +156,30 @@ public class Hospital_sign {
 		f_signup.add(user);
 		f_signup.add(L_name);
 		f_signup.add(L_date);
-		f_signup.add(L_address);
+		f_signup.add(L_date_c);
+		f_signup.add(L_pwd_r);
+		f_signup.add(L_pwd_r_x);
 		f_signup.add(L_contact);
+		f_signup.add(L_contact_a);
+		f_signup.add(L_contact_b);
+		f_signup.add(L_contactx);
 		f_signup.add(Lmessage1);
 		f_signup.add(L_id);
 		f_signup.add(L_pwd);
 		f_signup.add(T_id);
 		f_signup.add(T_pwd);
+		f_signup.add(T_pwd_r);
 		f_signup.add(T_name);
-		f_signup.add(T_date);
-		f_signup.add(T_address);
-		f_signup.add(T_contact);
+		f_signup.add(T_date_a);
+		f_signup.add(T_date_b);
+		f_signup.add(T_contact_A);
+		f_signup.add(T_contact_B);
+		f_signup.add(T_contact_C);
 		f_signup.add(L_idx);
 		f_signup.add(L_pwdx);
 		f_signup.add(L_namex);
 		f_signup.add(L_datex);
-		f_signup.add(L_contactx);
+
 		f_signup.add(btn_create);
 		f_signup.add(btn_back);
 		Popup.add(L_msg);
@@ -225,6 +253,27 @@ public class Hospital_sign {
 			}
 
 		});
+		T_pwd_r.addFocusListener(new FocusListener() { // 비밀번호 유효성 검사
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				L_pwd_r_x.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				L_pwd_r_x.setForeground(Color.red);
+				// TODO Auto-generated method stub
+				if (!T_pwd.getText().equals(T_pwd_r.getText())) {
+					L_pwd_r_x.setText("비밀번호가 동일하지 않습니다.");
+				} else {
+					L_pwd_r_x.setText("");
+				}
+			}
+
+		});
 
 		T_name.addFocusListener(new FocusListener() { // 이름 유효성 검사
 
@@ -254,41 +303,68 @@ public class Hospital_sign {
 
 		});
 
-		T_date.addFocusListener(new FocusListener() { // 생년월일 유효성 검사
+		T_date_a.addFocusListener(new FocusListener() { // 생년월일 유효성 검사
 
 			@Override
 			public void focusGained(FocusEvent e) {
 				// TODO Auto-generated method stub
-				T_date.setText("");
-				T_date.setForeground(Color.black);
+
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 				// TODO Auto-generated method stub
-
 				L_datex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				L_datex.setForeground(Color.red);
-				for (int i = 0; i < T_date.getText().length(); i++) {
-					if (T_date.getText().charAt(i) < '0' || T_date.getText().charAt(i) > '9') {
-						L_datex.setText("생년월일은 8자리로 숫자만 입력가능");
-					} else {
-						if (T_date.getText().length() != 8) {
-							L_datex.setText("생년월일은 8자리로 숫자만 입력가능");
+				String A = T_date_a.getText();
+				if (!A.isEmpty()) {
+					for (int i = 0; i < A.length(); i++) {
+						char ch = A.charAt(i);
+						if ((ch < '0' || ch > '9') || (A.length() != 6)) {
+							T_date_a.setText("");
+							L_datex.setText("주민번호 앞자리는 6자리의 숫자입니다.");
 						} else {
 							L_datex.setText("");
 						}
 					}
+				} else {
+					L_datex.setText("필수 항목입니다");
 				}
-				if (T_date.getText().isEmpty()) {
-					L_datex.setText("필수 항목입니다.");
 
+			}
+
+		});
+		T_date_b.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				L_datex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				L_datex.setForeground(Color.red);
+				String A = T_date_b.getText();
+				if (!A.isEmpty()) {
+					for (int i = 0; i < A.length(); i++) {
+						char ch = A.charAt(i);
+						if ((ch < '0' || ch > '9') || (A.length() != 7)) {
+							T_date_b.setText("");
+							L_datex.setText("주민번호 뒷자리는 7자리의 숫자입니다.");
+						} else {
+							L_datex.setText("");
+						}
+					}
+				} else {
+					L_datex.setText("필수 항목입니다.");
 				}
 			}
 
 		});
-
-		T_contact.addFocusListener(new FocusListener() { // 연락처 유효성 검사
+		T_contact_B.addFocusListener(new FocusListener() { // 연락처 유효성 검사
 
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -301,26 +377,57 @@ public class Hospital_sign {
 				// TODO Auto-generated method stub
 				L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				L_contactx.setForeground(Color.red);
-				for (int i = 0; i < T_contact.getText().length(); i++) {
-					if (T_contact.getText().charAt(i) < '0' || T_contact.getText().charAt(i) > '9') {
-						L_contactx.setText("연락처는 -를 제외한 숫자만 입력가능");
-					} else {
-						if (T_contact.getText().length() < 10 || T_contact.getText().length() > 11) {
-							L_contactx.setText("연락처는 -를 제외한 숫자만 입력가능");
+				String A = T_contact_B.getText();
+				if (!A.isEmpty()) {
+					for (int i = 0; i < A.length(); i++) {
+						char ch = A.charAt(i);
+						if ((ch < '0' || ch > '9') || (A.length() != 4)) {
+							T_contact_B.setText("");
+							L_contactx.setText("전화번호는 8자리의 숫자입니다. (지역번호 제외)");
 						} else {
 							L_contactx.setText("");
 						}
 					}
-				}
-				if (T_contact.getText().isEmpty()) {
+				} else {
 					L_contactx.setText("필수 항목입니다.");
 
 				}
 			}
 
 		});
+		T_contact_C.addFocusListener(new FocusListener() { // 연락처 유효성 검사
 
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				L_contactx.setForeground(Color.red);
+				String A = T_contact_C.getText();
+				if (!A.isEmpty()) {
+					for (int i = 0; i < A.length(); i++) {
+						char ch = A.charAt(i);
+						if ((ch < '0' || ch > '9') || (A.length() != 4)) {
+							T_contact_C.setText("");
+							L_contactx.setText("전화번호는 8자리의 숫자입니다. (지역번호 제외)");
+						} else {
+							L_contactx.setText("");
+						}
+					}
+				} else {
+					L_contactx.setText("필수 항목입니다.");
+
+				}
+			}
+
+		});
 		btn_back.addActionListener(new ActionListener() { // 돌아가기
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -345,29 +452,47 @@ public class Hospital_sign {
 					L_pwdx.setForeground(Color.red);
 					L_pwdx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				}
+				if (T_pwd_r.getText().isEmpty()) {
+					L_pwd_r_x.setText("필수 항목입니다.");
+					L_pwd_r_x.setForeground(Color.red);
+					L_pwd_r_x.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
 				if (T_name.getText().isEmpty()) {
 					L_namex.setText("필수 항목입니다.");
 					L_namex.setForeground(Color.red);
 					L_namex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				}
-				if (T_date.getText().equals(" 숫자만 입력가능(ex 20200608)")) {
+				if (T_date_a.getText().isEmpty()) {
 					L_datex.setText("필수 항목입니다.");
 					L_datex.setForeground(Color.red);
 					L_datex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				}
-				if (T_contact.getText().isEmpty()) {
+				if (T_date_b.getText().isEmpty()) {
+					L_datex.setText("필수 항목입니다.");
+					L_datex.setForeground(Color.red);
+					L_datex.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				if (T_contact_B.getText().isEmpty()) {
 					L_contactx.setText("필수 항목입니다.");
 					L_contactx.setForeground(Color.red);
 					L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 				}
+				if (T_contact_C.getText().isEmpty()) {
+					L_contactx.setText("필수 항목입니다.");
+					L_contactx.setForeground(Color.red);
+					L_contactx.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
+				}
+				date_all = T_date_a.getText() + "-" + T_date_b.getText(); // 주민번호 앞+뒷자리 (13)
+				contact_all = T_contact_A.getSelectedItem().toString() + "-" + T_contact_B.getText() + "-"
+						+ T_contact_C.getText();
 				if (group1.getSelectedCheckbox().toString().contains("환자")) {
 					// 라디오 박스 1번이 환자인지 확인하는 코드
 
 					if (L_idx.getText() == "해당 아이디는 가입 가능합니다." && L_pwdx.getText().isEmpty()
-							&& L_namex.getText().isEmpty() && L_datex.getText().isEmpty()
-							&& L_contactx.getText().isEmpty()) {
-						if (HS.inseruser(T_id.getText(), T_pwd.getText(), T_name.getText(),
-								Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText()) == true) {
+							&& L_pwd_r_x.getText().isEmpty() && L_namex.getText().isEmpty()
+							&& L_datex.getText().isEmpty() && L_contactx.getText().isEmpty()) {
+						if (HS.insertuser(T_id.getText(), T_pwd.getText(), T_name.getText(), date_all,
+								contact_all) == true) {
 							L_msg.setText("회원가입이 완료되었습니다.");
 							Popup.setVisible(true);
 							Popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -401,11 +526,10 @@ public class Hospital_sign {
 					});
 
 					if (L_idx.getText() == "해당 아이디는 가입 가능합니다." && L_pwdx.getText().isEmpty()
-							&& L_namex.getText().isEmpty() && L_datex.getText().isEmpty()
-							&& L_contactx.getText().isEmpty() && L_hospitalx.getText().isEmpty()
-							&& L_medicalx.getText().isEmpty()) {
-						if (HS.insertdoctor(T_id.getText(), T_pwd.getText(), T_name.getText(),
-								Integer.parseInt(T_date.getText()), T_address.getText(), T_contact.getText(),
+							&& L_pwd_r_x.getText().isEmpty() && L_namex.getText().isEmpty()
+							&& L_datex.getText().isEmpty() && L_contactx.getText().isEmpty()
+							&& L_hospitalx.getText().isEmpty() && L_medicalx.getText().isEmpty()) {
+						if (HS.insertdoctor(T_id.getText(), T_pwd.getText(), T_name.getText(), date_all, contact_all,
 								T_hospital.getText(), T_medical.getSelectedItem().toString()) == true) {
 							L_msg.setText("회원가입이 완료되었습니다.");
 							Popup.setVisible(true);
