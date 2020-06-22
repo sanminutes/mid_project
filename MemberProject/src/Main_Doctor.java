@@ -312,15 +312,18 @@ public class Main_Doctor implements ActionListener {
 					if (group1.getSelectedCheckbox().toString().contains("전체")) {
 						System.out.println("여기");
 						date_d = daily.getText().replaceAll("[^0-9]", ""); // J테이블에 출력된 정보의 기준이 되는 날짜 저장
-						date_f = String.valueOf(table.getValueAt(row, 2)); // J테이블 내 예약시간 저장
+						date_f = String.valueOf(table.getValueAt(row, 3)); // J테이블 내 예약시간 저장
 					} else {
 						System.out.println("저기");
 						date_d = daily.getText().replaceAll("[^0-9]", ""); // J테이블에 출력된 정보의 기준이 되는 날짜 저장
-						date_f = String.valueOf(table.getValueAt(row, 1)); // J테이블 내 예약시간 저장
+						date_f = String.valueOf(table.getValueAt(row, 2)); // J테이블 내 예약시간 저장
 					}
 				}
 				ArrayList<Hospital_Sql_Vo> schedule_check = HS.schedule_check(date_f, date_d, data.getH(), daily_date);
 				int cnt = 1;
+				if(schedule_check.size()==0) {
+					find_schedule.setText("조회 결과 없음");
+				}
 				for (int i = 0; i < schedule_check.size(); i++) {
 					Hospital_Sql_Vo user_schedule_check = (Hospital_Sql_Vo) schedule_check.get(i);
 					u_name = user_schedule_check.getA(); // 이름

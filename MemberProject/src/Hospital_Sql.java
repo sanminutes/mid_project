@@ -315,7 +315,6 @@ public class Hospital_Sql {
 					String etc = rs.getString(6); // 예약구분
 					String d_name = rs.getString(7); // 진료과목
 					String doctor = rs.getString(8); // 담당의
-					System.out.println(etc);
 					Hospital_Sql_Vo user_schedule_info = new Hospital_Sql_Vo(s_date_3, u_name, u_date, disease,
 							u_contact, etc, doctor, d_name);
 					user_schedule.add(user_schedule_info);
@@ -357,6 +356,9 @@ public class Hospital_Sql {
 		ArrayList<Hospital_Sql_Vo> schedule_check = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
+			System.out.println(date_d);
+			System.out.println(date_f);
+			System.out.println(d_hospital);
 			String s_find_a = "SELECT U_NUMBER " + "FROM schedule_info " + "WHERE h_number=" + d_hospital
 					+ " and S_DATE_2 ='" + date_d + "' AND s_date_3 = '" + date_f + "'";
 			rs = stmt.executeQuery(s_find_a);
@@ -364,6 +366,7 @@ public class Hospital_Sql {
 			while (rs.next()) {
 				u_number = rs.getInt(1);
 			}
+			System.out.println(u_number);
 			String s_find_b = "SELECT u.U_NAME, u.U_DATE, s.s_DATE_2, s.S_DATE_3, d.D_MEDICAL, d.D_NAME, s.s_disease, s.s_etc "
 					+ "FROM SCHEDULE_INFO s" + " INNER JOIN DOCTOR_INFORMATION d" + " ON s.D_NUMBER = d.D_NUMBER"
 					+ " INNER JOIN USER_INFORMATION u" + " ON s.U_NUMBER = u.U_NUMBER " + "WHERE s.U_NUMBER ="
