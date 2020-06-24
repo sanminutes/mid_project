@@ -15,9 +15,10 @@ public class Hospital_Sql {
 	private Statement stmt;
 	private ResultSet rs;
 
-	public ArrayList<Hospital_Sql_Vo> list(String id) { // 정보 가져오기
-		// ArrayList는 자바에서 지원하는 자료구조..
+	// 로그인시 해당 계정이 일반 고객(환자)인가, 의사인가 판단하는 쿼리
+	public ArrayList<Hospital_Sql_Vo> list(String id) {
 		ArrayList<Hospital_Sql_Vo> list = new ArrayList<Hospital_Sql_Vo>();
+
 		try {
 			connDB();
 			String find_id = "select * from private_information where p_id='" + id + "'";
@@ -78,13 +79,11 @@ public class Hospital_Sql {
 		return list;
 	}
 
-	public boolean insertuser(String id, String pwd, String name, String date, String contact) { // 가져오기
-		// ArrayList는 자바에서 지원하는 자료구조..
+	// 회원가입시 유저정보를 저장하기 위한 쿼리
+	public boolean insertuser(String id, String pwd, String name, String date, String contact) {
 		boolean join_result = false;
 		try {
 			connDB();
-			// --------------------------------------------[유저정보 저장하기 위한 쿼리]
-
 			int u_max = 0;
 			String u_max_number = "select max(u_number) from user_information";
 			rs = stmt.executeQuery(u_max_number);
@@ -206,7 +205,7 @@ public class Hospital_Sql {
 		return medical_list;
 	}
 
-	// 해당 병원에서 진료중인 과목들 출력
+	// 의사 번호, 의사이름 출력하는 쿼리
 	public ArrayList<Hospital_Sql_Vo> doctor_list(String h_name, String h_address, String medical) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<Hospital_Sql_Vo> doctor_list = new ArrayList<Hospital_Sql_Vo>();
@@ -236,7 +235,7 @@ public class Hospital_Sql {
 		return doctor_list;
 	}
 
-	// ---------------------------------[예약 정보 저장]
+	// 예약정보 저장하는 쿼리
 	public boolean schedule(String u_number, int doctor_n, String date_2, String date_3, String disease) { // 가져오기
 		boolean insert_result = false;
 		try {
@@ -255,7 +254,7 @@ public class Hospital_Sql {
 				d_n = rs.getInt(1);
 			}
 			String schedule = "insert into schedule_info values(" + (max + 1) + "," + u_number + "," + doctor_n + ","
-					+ date_2_i + ",'" + date_3 + "'," + d_n + ",'" + disease + "','진료대기'"+")";
+					+ date_2_i + ",'" + date_3 + "'," + d_n + ",'" + disease + "','진료대기'" + ")";
 			rs = stmt.executeQuery(schedule);
 			insert_result = true;
 
@@ -335,7 +334,7 @@ public class Hospital_Sql {
 					String u_contact = rs.getString(5); // 연락처
 					String etc = rs.getString(6); // 예약구분
 					Hospital_Sql_Vo user_schedule_info = new Hospital_Sql_Vo(s_date_3, u_name, u_date, disease,
-							u_contact,etc);
+							u_contact, etc);
 					user_schedule.add(user_schedule_info);
 
 				}
@@ -356,9 +355,6 @@ public class Hospital_Sql {
 		ArrayList<Hospital_Sql_Vo> schedule_check = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
-			System.out.println(date_d);
-			System.out.println(date_f);
-			System.out.println(d_hospital);
 			String s_find_a = "SELECT U_NUMBER " + "FROM schedule_info " + "WHERE h_number=" + d_hospital
 					+ " and S_DATE_2 ='" + date_d + "' AND s_date_3 = '" + date_f + "'";
 			rs = stmt.executeQuery(s_find_a);
@@ -366,7 +362,6 @@ public class Hospital_Sql {
 			while (rs.next()) {
 				u_number = rs.getInt(1);
 			}
-			System.out.println(u_number);
 			String s_find_b = "SELECT u.U_NAME, u.U_DATE, s.s_DATE_2, s.S_DATE_3, d.D_MEDICAL, d.D_NAME, s.s_disease, s.s_etc "
 					+ "FROM SCHEDULE_INFO s" + " INNER JOIN DOCTOR_INFORMATION d" + " ON s.D_NUMBER = d.D_NUMBER"
 					+ " INNER JOIN USER_INFORMATION u" + " ON s.U_NUMBER = u.U_NUMBER " + "WHERE s.U_NUMBER ="
@@ -393,6 +388,142 @@ public class Hospital_Sql {
 		}
 
 		return schedule_check;
+	}
+
+	public boolean update_schedule(String s_date_2, String s_date_3, String s_etc) {
+		boolean join_result = false;
+		try {
+			connDB();
+			String s_update = "UPDATE schedule_info SET s_etc ='" + s_etc + "' WHERE s_date_2='" + s_date_2
+					+ "' AND s_date_3='" + s_date_3 + "'";
+			rs = stmt.executeQuery(s_update);
+			join_result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return join_result;
+	}
+
+	public ArrayList<Hospital_Sql_Vo> find_etc(String date_f, String date_d, String hospital, String doctor,
+			String daily_date) { // 예약시간 , 선택된 날짜, 병원번호, 금일 날짜
+		ArrayList<Hospital_Sql_Vo> etc_check = new ArrayList<Hospital_Sql_Vo>();
+		try {
+			connDB();
+			String s_find_b = "select s_etc from schedule_info where s_date_2 = " + date_f + " and s_date_3='" + date_d
+					+ "' and h_number =" + hospital + " and d_number =" + doctor;
+			rs = stmt.executeQuery(s_find_b);
+			while (rs.next()) {
+				String s_etc = rs.getString(1); // 구분
+
+				Hospital_Sql_Vo find_etc = new Hospital_Sql_Vo(s_etc);
+				etc_check.add(find_etc);
+			}
+
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+
+		return etc_check;
+	}
+
+	// 비밀번호 변경 쿼리
+	public boolean update_pwd(String id, String pwd, String r_pwd) {
+		boolean join_result = false;
+		try {
+			connDB();
+			String s_update = "update private_information set p_pwd='" + r_pwd + "' where p_id = '" + id
+					+ "' and p_pwd = '" + pwd + "'";
+			rs = stmt.executeQuery(s_update);
+			join_result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return join_result;
+	}
+
+	// 회원정보에서 예약조회
+	public ArrayList<Hospital_Sql_Vo> u_schedule(String u_number, String today_date) {
+		ArrayList<Hospital_Sql_Vo> u_schedule = new ArrayList<Hospital_Sql_Vo>();
+		try {
+			connDB();
+			String s_find_b = "SELECT h.h_name, d.D_MEDICAL,d.d_name,s.s_date_2,s.s_date_3,s.s_disease FROM schedule_info s"
+					+ " INNER JOIN DOCTOR_INFORMATION d ON s.D_NUMBER = d.D_NUMBER INNER JOIN HOSPITAL_INFORMATION h ON s.h_NUMBER = h.h_NUMBER"
+					+ " WHERE u_number =" + u_number + "AND s_date_2>= '" + today_date + "' order by s_date_2 asc";
+			rs = stmt.executeQuery(s_find_b);
+			while (rs.next()) {
+				String hospital = rs.getString(1); // 회원정보
+				String medical = rs.getString(2); // 의사정보
+				String doctor = rs.getString(3); // 날짜
+				String s_date_2 = rs.getString(4); // 시간
+				String s_date_3 = rs.getString(5); // 병원정보
+				String disease = rs.getString(6); // 증상기재
+
+				Hospital_Sql_Vo user_sd = new Hospital_Sql_Vo(hospital, medical, doctor, s_date_2, s_date_3, disease);
+				u_schedule.add(user_sd);
+			}
+
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+
+		return u_schedule;
+	}
+
+	public ArrayList<Hospital_Sql_Vo> u_scheduleB(String u_number, String today_date) {
+		ArrayList<Hospital_Sql_Vo> u_scheduleB = new ArrayList<Hospital_Sql_Vo>();
+		try {
+			connDB();
+			System.out.println(u_number);
+			System.out.println(today_date);
+			String s_find_b = "SELECT h.h_name, d.D_MEDICAL,d.d_name,s.s_date_2,s.s_date_3,s.s_disease, s.s_etc FROM schedule_info s"
+					+ " INNER JOIN DOCTOR_INFORMATION d ON s.D_NUMBER = d.D_NUMBER INNER JOIN HOSPITAL_INFORMATION h ON s.h_NUMBER = h.h_NUMBER"
+					+ " WHERE u_number =" + u_number + "AND s_date_2< '" + today_date + "' order by s_date_2 asc";
+			rs = stmt.executeQuery(s_find_b);
+			while (rs.next()) {
+				String hospital = rs.getString(1); // 회원정보
+				String medical = rs.getString(2); // 의사정보
+				String doctor = rs.getString(3); // 날짜
+				String s_date_2 = rs.getString(4); // 시간
+				String s_date_3 = rs.getString(5); // 병원정보
+				String disease = rs.getString(6); // 증상기재
+				String etc = rs.getString(7); // 증상기재
+
+				Hospital_Sql_Vo user_sd = new Hospital_Sql_Vo(hospital, medical, doctor, s_date_2, s_date_3, disease, etc);
+				u_scheduleB.add(user_sd);
+			}
+
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+
+		return u_scheduleB;
+	}
+	
+	
+	
+	// 회원 예약 조회에서 쿼리 삭제
+
+			public boolean delete_t(String u_number, String hospital, String doctor, String date2, String date3) {
+		boolean join_result = false;
+		try {
+			connDB();
+			String delete = "DELETE FROM SCHEDULE_INFO si WHERE si.S_NUMBER = ("
+					+ "SELECT s.S_NUMBER FROM	schedule_info s "
+					+ "INNER JOIN DOCTOR_INFORMATION d ON s.D_NUMBER = d.D_NUMBER INNER JOIN HOSPITAL_INFORMATION h ON s.h_NUMBER = h.h_NUMBER "
+					+ "WHERE U_NUMBER =" + u_number + " AND h.H_NAME = '" + hospital + "' AND d.D_NAME = '" + doctor
+					+ "'AND s_date_2 = '" + date2 + "'AND s_date_3 = '" + date3 + "')";
+			rs = stmt.executeQuery(delete);
+			join_result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return join_result;
 	}
 
 	public void connDB() {

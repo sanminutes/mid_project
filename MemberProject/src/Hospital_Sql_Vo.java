@@ -13,7 +13,12 @@ public class Hospital_Sql_Vo {
 
 	public Hospital_Sql_Vo() {
 	}
+	public Hospital_Sql_Vo(String A) {
+		this.A = A;
 
+	}
+
+	
 	public Hospital_Sql_Vo(int Z, String A) {
 		this.Z = Z;
 		this.A = A;

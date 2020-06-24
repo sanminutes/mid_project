@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -43,12 +45,14 @@ public class Main_Doctor implements ActionListener {
 	Hospital_Sql HS = new Hospital_Sql();
 	JComboBox<String> comboBox;
 	JPanel p_left;
+	String update_a;
 
 	public void main_hospital_doctor(Hospital_Sql_Vo data) {
 		fmain_doctor = new JFrame(data.getI() + " [" + data.getJ() + "]");
 		fmain_doctor.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
 		fmain_doctor.setResizable(false);
 		fmain_doctor.setSize(1000, 700);
+		fmain_doctor.setLocationRelativeTo(null);
 		fmain_doctor.setLayout(null);
 		fmain_doctor.setVisible(true);
 		fmain_doctor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -62,7 +66,8 @@ public class Main_Doctor implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				JDialog exit = new JDialog(fmain_doctor, "종료 안내", true);
-				exit.setBounds(20, 40, 220, 150);
+				exit.setSize(220, 150);
+				exit.setLocationRelativeTo(null);
 				exit.setLayout(null);
 				JLabel msg_1 = new JLabel("종료 하시겠습니까?");
 				msg_1.setBounds(50, 20, 140, 25);
@@ -310,19 +315,17 @@ public class Main_Doctor implements ActionListener {
 					model_d.setNumRows(0);
 					int row = table.getSelectedRow();
 					if (group1.getSelectedCheckbox().toString().contains("전체")) {
-						System.out.println("여기");
 						date_d = daily.getText().replaceAll("[^0-9]", ""); // J테이블에 출력된 정보의 기준이 되는 날짜 저장
 						date_f = String.valueOf(table.getValueAt(row, 3)); // J테이블 내 예약시간 저장
 					} else {
-						System.out.println("저기");
 						date_d = daily.getText().replaceAll("[^0-9]", ""); // J테이블에 출력된 정보의 기준이 되는 날짜 저장
 						date_f = String.valueOf(table.getValueAt(row, 2)); // J테이블 내 예약시간 저장
 					}
 				}
 				ArrayList<Hospital_Sql_Vo> schedule_check = HS.schedule_check(date_f, date_d, data.getH(), daily_date);
 				int cnt = 1;
-				if(schedule_check.size()==0) {
-					find_schedule.setText("조회 결과 없음");
+				if (schedule_check.size() == 0) {
+					find_schedule.setText("방문 이력 없음");
 				}
 				for (int i = 0; i < schedule_check.size(); i++) {
 					Hospital_Sql_Vo user_schedule_check = (Hospital_Sql_Vo) schedule_check.get(i);
@@ -401,7 +404,7 @@ public class Main_Doctor implements ActionListener {
 		}
 		// -----------------------------------------------------------------------------------
 		d_number = data.getG();
-//		d_hospital = data.getH();
+		d_hospital = data.getH();
 		m_result.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -536,7 +539,6 @@ public class Main_Doctor implements ActionListener {
 			String etc = user_schedule_info.getF();
 			String d_name = user_schedule_info.getG(); // 담당의
 			String medical = user_schedule_info.getH(); // 진료과목
-			System.out.println();
 			model.addRow(new Object[] { cnt++, etc, date, name, date_a, disease, contact });
 			model2.addRow(new Object[] { nnt++, etc, medical, date, name, date_a, disease, contact, d_name });
 			// --------------------------JTabel안에 콤보박스 삽입
@@ -546,55 +548,18 @@ public class Main_Doctor implements ActionListener {
 			comboBox.addItem("진료대기");
 			comboBox.addItem("진료완료");
 			comboBox.addItem("예약취소");
+
 			comboBox.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 			// 테이블에서 하나의 column(열, 칸) 관리자 얻어오기
 			TableColumn columnA = table.getColumnModel().getColumn(1);
 			columnA.setCellEditor(new DefaultCellEditor(comboBox));
-			comboBox.addActionListener(new ActionListener() {
+			comboBox.addItemListener(new ItemListener() {
 				@Override
-				public void actionPerformed(ActionEvent e) {
+				public void itemStateChanged(ItemEvent e) {
 					// TODO Auto-generated method stub
-					if (comboBox.getSelectedItem().toString().equals("진료완료")) {
-						JDialog msg = new JDialog(fmain_doctor, "확인", true);
-						msg.setBounds(20, 40, 300, 150);
-						msg.setLayout(null);
-						JLabel msg_1 = new JLabel("["+comboBox.getSelectedItem().toString()+"]로 변경하시겠습니까?");
-						msg_1.setBounds(50, 20, 300, 25);
-						msg_1.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-						JButton yes = new JButton("예");
-						yes.addActionListener(new ActionListener() {
-
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								// TODO Auto-generated method stub
-								System.exit(0);
-							}
-
-						});
-						yes.setBounds(60, 60, 60, 25);
-						yes.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-						yes.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
-						JButton no = new JButton("아니요");
-						no.addActionListener(new ActionListener() {
-
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								// TODO Auto-generated method stub
-								msg.dispose();
-							}
-
-						});
-						no.setBounds(140, 60, 80, 25);
-						no.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
-						no.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.9f));
-						msg.add(msg_1);
-						msg.add(yes);
-						msg.add(no);
-						msg.setVisible(true);
-						
-					} else if (comboBox.getSelectedItem().toString().contentEquals("예약취소")) {
-						System.out.println("뭐냐");
-					}
+					int row = table.getSelectedRow();
+					String A = String.valueOf(table.getValueAt(row, 2));
+				
 				}
 
 			});

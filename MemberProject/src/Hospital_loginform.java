@@ -18,11 +18,13 @@ public class Hospital_loginform {
 	Hospital_sign TP = new Hospital_sign();
 	Main_User SP = new Main_User();
 	Main_Doctor MD = new Main_Doctor();
+	Hospital_Sql HS = new Hospital_Sql();
 
 	Hospital_loginform() {
 		// --------------------------------------------------[1. 로그인 화면을 위한 프레임 작성]
 		f_login = new JFrame("병원 진료 예약 시스템");
 		f_login.setSize(350, 500);
+		f_login.setLocationRelativeTo(null);
 		f_login.setLayout(null);
 		f_login.setVisible(true); // 창을 화면에 나타낼 것인지 설정
 		f_login.setResizable(false); // 창크기고정
@@ -60,7 +62,8 @@ public class Hospital_loginform {
 		f_t_id.setBounds(90, 300, 140, 25);
 		f_t_pwd.setBounds(90, 335, 140, 25);
 		img.setBounds(40, 80, 300, 200);
-		img.setIcon(new ImageIcon("img/QPJ2SO6E.jpg"));
+		int R_N = (int) ((Math.random() * 5) + 1);
+		img.setIcon(new ImageIcon("img/" + R_N + ".jpg"));
 		// ---------------------------------------------------------------------------
 		f_b_signup.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		f_b_find.setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
@@ -81,13 +84,13 @@ public class Hospital_loginform {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				// -------------------------[로그인 검증]
-				Hospital_Sql oct = new Hospital_Sql();
+
 				if (f_t_id.getText().isEmpty()) {
 					f_t_message.setText("  아이디를 입력해주세요.");
 				} else if (f_t_pwd.getText().isEmpty()) {
 					f_t_message.setText("  비밀번호를 입력해주세요.");
 				} else {
-					ArrayList<Hospital_Sql_Vo> list = oct.list(f_t_id.getText());
+					ArrayList<Hospital_Sql_Vo> list = HS.list(f_t_id.getText());
 					if (list.size() == 0) {
 						f_t_message.setText("  해당 아이디는 존재하지 않습니다.");
 					} else {
@@ -101,7 +104,7 @@ public class Hospital_loginform {
 									f_login.dispose();
 									MD.main_hospital_doctor(data);
 								} else {
-								f_t_message.setText("현재 로그인 불가, 해당 병원 전산팀에 문의바람(신규)");
+									f_t_message.setText("현재 로그인 불가, 해당 병원 전산팀에 문의바람(신규)");
 								}
 							}
 

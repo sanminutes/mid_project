@@ -36,6 +36,7 @@ public class Hospital_sign {
 		f_signup.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		f_signup.setLayout(null);
 		f_signup.setSize(400, 540);
+		f_signup.setLocationRelativeTo(null);
 		f_signup.setResizable(false);
 		// ---------------------------------------------------------------------------
 		JLabel Lmessage1 = new JLabel("[협력 병원에 소속된 의사인 경우만 '의사'를 선택해 주십시요.]");
@@ -150,7 +151,7 @@ public class Hospital_sign {
 
 		});
 		Popup.setSize(300, 150);
-		Popup.setLocation(24, 150);
+		Popup.setLocationRelativeTo(null);
 
 		f_signup.add(doctor);
 		f_signup.add(user);
