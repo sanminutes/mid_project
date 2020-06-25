@@ -219,7 +219,7 @@ public class Hospital_Sql {
 				hospital_n = rs.getInt(1);
 			}
 			String findB = "select d_number, d_name from doctor_information where d_hospital=" + hospital_n
-					+ " and d_medical='" + medical + "'";
+					+ " and d_medical='" + medical + "' and d_level=2";
 			rs = stmt.executeQuery(findB);
 			while (rs.next()) {
 				int d_number = rs.getInt(1);
@@ -236,10 +236,11 @@ public class Hospital_Sql {
 	}
 
 	// 예약정보 저장하는 쿼리
-	public boolean schedule(String u_number, int doctor_n, String date_2, String date_3, String disease) { // 가져오기
+	public boolean schedule(String u_number, String hospital, String medical, String doctor_n, String date_2, String date_3, String disease) { // 가져오기
 		boolean insert_result = false;
 		try {
 			connDB();
+			System.out.println(doctor_n);
 			int date_2_i = Integer.parseInt(date_2.replaceAll("[^0-9]", ""));
 			String max_find = "select max(s_number) from schedule_info";
 			rs = stmt.executeQuery(max_find);
@@ -247,13 +248,20 @@ public class Hospital_Sql {
 			while (rs.next()) {
 				max = rs.getInt(1);
 			}
-			String doctor_f = "SELECT d_hospital FROM doctor_information WHERE d_number = " + doctor_n;
+			String doctor_num = "SELECT d_number FROM DOCTOR_INFORMATION WHERE D_MEDICAL ='"+medical+"' AND d_name ='"+doctor_n+"' AND D_HOSPITAL =(" + 
+					"SELECT h_number FROM HOSPITAL_INFORMATION hi WHERE h_name = '"+hospital+"')";
+			rs = stmt.executeQuery(doctor_num);
+			int doc_n = 0;
+			while (rs.next()) {
+				doc_n = rs.getInt(1);
+			}
+			String doctor_f = "SELECT d_hospital FROM doctor_information WHERE d_number = " + doc_n;
 			rs = stmt.executeQuery(doctor_f);
 			int d_n = 0;
 			while (rs.next()) {
 				d_n = rs.getInt(1);
 			}
-			String schedule = "insert into schedule_info values(" + (max + 1) + "," + u_number + "," + doctor_n + ","
+			String schedule = "insert into schedule_info values(" + (max + 1) + "," + u_number + "," + doc_n + ","
 					+ date_2_i + ",'" + date_3 + "'," + d_n + ",'" + disease + "','진료대기'" + ")";
 			rs = stmt.executeQuery(schedule);
 			insert_result = true;
@@ -265,13 +273,20 @@ public class Hospital_Sql {
 	}
 
 	// 스케쥴 찾기
-	public ArrayList<Hospital_Sql_Vo> schedule_find(String date_2, int d_number) {
+	public ArrayList<Hospital_Sql_Vo> schedule_find(String date_2, String doctor_n, String hospital, String medical) {
 		// ArrayList는 자바에서 지원하는 자료구조..
 		ArrayList<Hospital_Sql_Vo> schedule_find = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
+			String doctor_num = "SELECT d_number FROM DOCTOR_INFORMATION WHERE D_MEDICAL ='"+medical+"' AND d_name ='"+doctor_n+"' AND D_HOSPITAL =(" + 
+					"SELECT h_number FROM HOSPITAL_INFORMATION hi WHERE h_name = '"+hospital+"')";
+			rs = stmt.executeQuery(doctor_num);
+			int doc_n = 0;
+			while (rs.next()) {
+				doc_n = rs.getInt(1);
+			}
 			int date_2_i = Integer.parseInt(date_2.replaceAll("[^0-9]", ""));
-			String s_find = "select s_date_2, s_date_3 from schedule_info where d_number =" + d_number
+			String s_find = "select s_date_2, s_date_3 from schedule_info where d_number =" + doc_n
 					+ " and s_date_2=" + date_2_i;
 			rs = stmt.executeQuery(s_find);
 			while (rs.next()) {
@@ -351,12 +366,12 @@ public class Hospital_Sql {
 
 	// 환자의 이전 방문 내역을 조회하기 위한 쿼리
 	public ArrayList<Hospital_Sql_Vo> schedule_check(String date_f, String date_d, String d_hospital,
-			String daily_date) { // 예약시간 , 선택된 날짜, 병원번호, 금일 날짜
+			String daily_date, String d_number) { // 예약시간 , 선택된 날짜, 병원번호, 금일 날짜
 		ArrayList<Hospital_Sql_Vo> schedule_check = new ArrayList<Hospital_Sql_Vo>();
 		try {
 			connDB();
 			String s_find_a = "SELECT U_NUMBER " + "FROM schedule_info " + "WHERE h_number=" + d_hospital
-					+ " and S_DATE_2 ='" + date_d + "' AND s_date_3 = '" + date_f + "'";
+					+ " and S_DATE_2 ='" + date_d + "' AND s_date_3 = '" + date_f + "' and d_number="+d_number;
 			rs = stmt.executeQuery(s_find_a);
 			int u_number = 0;
 			while (rs.next()) {

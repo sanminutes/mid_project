@@ -322,7 +322,12 @@ public class Main_Doctor implements ActionListener {
 						date_f = String.valueOf(table.getValueAt(row, 2)); // J테이블 내 예약시간 저장
 					}
 				}
-				ArrayList<Hospital_Sql_Vo> schedule_check = HS.schedule_check(date_f, date_d, data.getH(), daily_date);
+				ArrayList<Hospital_Sql_Vo> schedule_check = HS.schedule_check(date_f, date_d, data.getH(), daily_date, data.getG());
+				
+				System.out.println(date_f);
+				System.out.println(date_d);
+				System.out.println(data.getH());
+				System.out.println(daily_date);
 				int cnt = 1;
 				if (schedule_check.size() == 0) {
 					find_schedule.setText("방문 이력 없음");
@@ -485,13 +490,13 @@ public class Main_Doctor implements ActionListener {
 		if (group1.getSelectedCheckbox().toString().contains("전체")) {
 			table.setModel(model2);
 			table.getColumnModel().getColumn(0).setPreferredWidth(50); // J테이블 내 속성들간의 간격 조절
-			table.getColumnModel().getColumn(2).setPreferredWidth(80);
-			table.getColumnModel().getColumn(3).setPreferredWidth(200);
-			table.getColumnModel().getColumn(4).setPreferredWidth(60);
-			table.getColumnModel().getColumn(5).setPreferredWidth(70);
-			table.getColumnModel().getColumn(6).setPreferredWidth(120);
-			table.getColumnModel().getColumn(7).setPreferredWidth(300);
-			table.getColumnModel().getColumn(8).setPreferredWidth(100);
+			table.getColumnModel().getColumn(1).setPreferredWidth(80);
+			table.getColumnModel().getColumn(2).setPreferredWidth(200);
+			table.getColumnModel().getColumn(3).setPreferredWidth(60);
+			table.getColumnModel().getColumn(4).setPreferredWidth(70);
+			table.getColumnModel().getColumn(5).setPreferredWidth(120);
+			table.getColumnModel().getColumn(6).setPreferredWidth(300);
+			table.getColumnModel().getColumn(7).setPreferredWidth(100);
 			DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 			dtcr.setHorizontalAlignment(SwingConstants.CENTER);
 			table.getColumn("번호").setCellRenderer(dtcr);

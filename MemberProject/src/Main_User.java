@@ -123,10 +123,10 @@ public class Main_User implements ActionListener {
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
 						msg.setVisible(false);
-						A=1;
-						if(B==0) {
+						A = 1;
+						if (B == 0) {
 							right.setVisible(true);
-						}else {
+						} else {
 							right_2.setVisible(false);
 							right.setVisible(true);
 						}
@@ -170,6 +170,7 @@ public class Main_User implements ActionListener {
 								// TODO Auto-generated method stub
 								JDialog warning = new JDialog(user_info, "확인", true);
 								JLabel msg = new JLabel();
+								msg.setFont(new Font("나눔바른고딕",Font.PLAIN,14));
 								warning.setLayout(null);
 								msg.setBounds(38, 40, 360, 25);
 								warning.setSize(400, 140);
@@ -196,9 +197,9 @@ public class Main_User implements ActionListener {
 									r_pwd2_x.setText("");
 									warning.setVisible(true);
 								} else { // 조건에 다 맞을때
-									if(HS.update_pwd(id_x.getText(), data.getE(), r_pwd_x.getText())==true) {
+									if (HS.update_pwd(id_x.getText(), data.getE(), r_pwd_x.getText()) == true) {
 										System.out.println("ㅇㅇㅇㅇ?");
-										JDialog ok_in = new JDialog(user_info,"변경 안내", true);
+										JDialog ok_in = new JDialog(user_info, "변경 안내", true);
 										JLabel ok_in_l = new JLabel("변경이 완료 되었습니다.");
 										JButton ok_in_btn = new JButton("확인");
 										ok_in.setLayout(null);
@@ -208,9 +209,9 @@ public class Main_User implements ActionListener {
 										ok_in.add(ok_in_btn);
 										ok_in_l.setBounds(20, 20, 180, 25);
 										ok_in_btn.setBounds(60, 60, 60, 25);
-										ok_in_l.setFont(new Font("나눔바른고딕",Font.PLAIN,14));
-										ok_in_btn.setFont(new Font("나눔바른고딕",Font.PLAIN,14));
-							
+										ok_in_l.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+										ok_in_btn.setFont(new Font("나눔바른고딕", Font.PLAIN, 14));
+
 										ok_in_btn.addActionListener(new ActionListener() {
 											@Override
 											public void actionPerformed(ActionEvent e) {
@@ -221,10 +222,9 @@ public class Main_User implements ActionListener {
 												r_pwd2_x.setText("");
 												ok_in.dispose();
 											}
-											
+
 										});
-										
-										
+
 										ok_in.setVisible(true);
 									}
 								}
@@ -240,15 +240,14 @@ public class Main_User implements ActionListener {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-				
 
 						right_2 = new JPanel();
 						right_2.setLayout(null);
 						right_2.setBackground(Color.white);
-						B=1;
-						if(A==0) {
+						B = 1;
+						if (A == 0) {
 							right_2.setVisible(true);
-						}else {
+						} else {
 							right.setVisible(false);
 							right_2.setVisible(true);
 						}
@@ -270,7 +269,6 @@ public class Main_User implements ActionListener {
 								// TODO Auto-generated method stub
 								if (e.getClickCount() == 2) {
 									int row = table.getSelectedRow();
-									row = 0;
 									String del_hospital = (String) table.getValueAt(row, 1);
 									String del_medical = (String) table.getValueAt(row, 2);
 									String del_doctor = (String) table.getValueAt(row, 3);
@@ -563,7 +561,7 @@ public class Main_User implements ActionListener {
 		medical.addItem("먼저 병원을 입력해 주세요");
 		medical.setFont(new Font("나눔바른고딕", Font.PLAIN, 12));
 
-		btn_send.addActionListener(new ActionListener() {
+		btn_send.addActionListener(new ActionListener() { // 예약 버튼
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -571,7 +569,8 @@ public class Main_User implements ActionListener {
 						&& !hospital.getText().isEmpty() && !medical.getSelectedItem().equals("먼저 병원을 선택하세요")
 						&& !doctor.getSelectedItem().equals("먼저 병원을 선택하세요") && !date_2.getText().isEmpty()
 						&& !date_3.getSelectedItem().equals("예약 가능한 시간이 없습니다")) {
-					if (HS.schedule(data.getF(), d_number, date_2.getText(), date_3.getSelectedItem().toString(),
+					if (HS.schedule(data.getF(), hospital.getText(), medical.getSelectedItem().toString(),
+							doctor.getSelectedItem().toString(), date_2.getText(), date_3.getSelectedItem().toString(),
 							disease.getText()) == true) {
 						JDialog send_ok = new JDialog(fmain_user, "예약 안내", true);
 						send_ok.setSize(200, 150);
@@ -988,7 +987,8 @@ public class Main_User implements ActionListener {
 								"12:30", "13:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00",
 								"17:30" };
 						if (!date_2.getText().isEmpty()) {
-							ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), d_number);
+							ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), doctor.getSelectedItem().toString(),
+									hospital.getText(), medical.getSelectedItem().toString());
 
 							for (int k = 0; k < schedule_find.size(); k++) {//
 								Hospital_Sql_Vo schedule_info = (Hospital_Sql_Vo) schedule_find.get(k);
@@ -1126,7 +1126,8 @@ public class Main_User implements ActionListener {
 			}
 		}
 		if (!doctor.getSelectedItem().toString().isEmpty() && !date_2.getText().isEmpty()) {
-			ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), d_number);
+			ArrayList<Hospital_Sql_Vo> schedule_find = HS.schedule_find(date_2.getText(), doctor.getSelectedItem().toString(),
+					hospital.getText(), medical.getSelectedItem().toString());
 			for (int k = 0; k < schedule_find.size(); k++) {//
 				Hospital_Sql_Vo schedule_info = (Hospital_Sql_Vo) schedule_find.get(k);
 				String s_date_3 = schedule_info.getA();

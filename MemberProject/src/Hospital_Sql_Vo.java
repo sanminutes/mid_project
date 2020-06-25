@@ -30,7 +30,12 @@ public class Hospital_Sql_Vo {
 		this.B = B;
 		this.C = C;
 	}
-	
+	public Hospital_Sql_Vo(String A, String B, String C, String D) {
+		this.A = A;
+		this.B = B;
+		this.C = C;
+		this.D = D;
+	}
 	public Hospital_Sql_Vo(String A, String B, String C, String D, String E) {
 		this.A = A;
 		this.B = B;

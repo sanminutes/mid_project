@@ -35,7 +35,7 @@ public class Hospital_sign {
 		f_signup = new JFrame("병원 진료 예약 시스템");
 		f_signup.getContentPane().setBackground(Color.getHSBColor(0.0f, 0.0f, 0.98f));
 		f_signup.setLayout(null);
-		f_signup.setSize(400, 540);
+		f_signup.setSize(400, 540);	
 		f_signup.setLocationRelativeTo(null);
 		f_signup.setResizable(false);
 		// ---------------------------------------------------------------------------
@@ -555,7 +555,6 @@ public class Hospital_sign {
 				L_hospitalx = new JLabel();
 				L_medical = new JLabel("진료 과목명 : ");
 				L_medicalx = new JLabel();
-				Main_User lg = new Main_User();
 				T_hospital = new JTextField();
 				T_hospital.setEditable(false);
 				T_medical = new JComboBox();
